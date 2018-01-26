@@ -8,6 +8,7 @@
 	- [DemoCode](#democode)
 - [Options](#options)
     - [Vuescroll Options](#vuescroll-options)
+    - [ScrollContent Options](#scrollcontent-options)
     - [Scrollbar Options](#scrollbar-options)
     - [Event](#event)
     - [Global Configuartion](#global-configuartion)
@@ -128,9 +129,16 @@ Or if you are in the nodejs environment, install it by npm, and use it:
 
 option|defaultValue|description
 -----|------------|----
-ops|`{vBar:{},hBar:{}}`| **The configs of vBar and hBar**
-scrollContentStyle|`{padding: false, tag: 'div', props:{}, attrs: {}}`| **The style config object of scrollContent e.g. {height:'100%'} or {padding: false},get rid of the padding of the scrollContent, tag means you can treat scrollcontent as other third-party component, e.g. {tag: 'v-layout'}, if you want to sent props to third party component, use the props, e.g. props:{row: true}, the attrs opation is the same as props optioin**
+ops|`{vBar:{},hBar:{}, scrollContent:{}}`| **The configs of vBar and hBar**
 accuracy|`5`| **The accuracy determins that the scrollbar will show or not. e.g. If the scrollPanel and scrollContent has a difference of less than 5 px,the scrollbar will not show.**
+
+### ScrollContent Options
+option|defaultValue|description
+-----|------------|----
+padding|`false`| **Set false to get rid of the padding of scroll content, otherwise, scroll content will have a padding of scrollbar's width of height**
+tag|`div`|**Setting tag means you can treat scrollcontent as other third-party component, e.g. {tag: 'v-layout'}**
+props|`{}`|**If you want to sent props to third party component, use the props, e.g. props:{someProp: true}**
+attrs|`{}`|**The attrs opation is the same as props optioin**
 
 ### Scrollbar Options
 
@@ -157,9 +165,14 @@ vscroll/hscroll|`bar,content,process`|Bar is the information about scrollbar, an
     Vue.prototype.$vuescrollConfig = {
         // 
         scrollContent: {
-            height: '100%',
-            padding: false,//true,
-            boxSizing: 'border-box'  
+            tag: 'div',
+            padding: true,
+            props: {
+
+            },
+            attrs: {
+
+            }  
         },
         // 
         vRail: {

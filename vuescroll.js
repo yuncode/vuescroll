@@ -26,10 +26,8 @@
             Vue.prototype.$vuescrollConfig = {
                 // 
                 scrollContent: {
-                   minHeight: '100%',
-                   padding: false,//true,
-                   boxSizing: 'border-box',
                    tag: 'div',
+                   padding: true,
                    props: {
 
                    },
@@ -142,10 +140,9 @@
         name: 'vuesSrollContent',
         render: function(_c) {
             var vm = this;
-            var style = vm.ops;
-            style.minHeight = '100%';
+             
             return _c(vm.ops.tag, {
-                style: style,
+                style: vm.state.style,
                 class: "vuesSrollContent",
                 props: vm.ops.props,
                 attrs: vm.ops.attrs
@@ -153,6 +150,9 @@
         },
         props: {
             ops: {
+            },
+            state: {
+                
             }
         }
     }
@@ -389,6 +389,12 @@
                 scrollContent: {
                     ops: {
                          
+                    },
+                    state: {
+                        style: {
+                            minHeight: '100%',
+                            boxSizing: 'border-box',
+                        }
                     }
                 },
                 vRail: {
@@ -464,7 +470,8 @@
             }, 
             [_c('vuesSrollContent',{
                 props: {
-                    ops: vm.scrollContent.ops
+                    ops: vm.scrollContent.ops,
+                    state: vm.scrollContent.state
                 }
             },
             vm.$slots.default
@@ -501,7 +508,7 @@
             // merge the global config
             var config = {};
             deepMerge(this.$vuescrollConfig,config);
-
+            
             this.scrollContent.ops = config.scrollContent
             this.vRail.ops = config.vRail;
             this.vScrollbar.ops = config.vBar;
@@ -527,7 +534,7 @@
                 this.merge(this.ops.hBar, this.hScrollbar.ops);
                 this.merge(this.ops.vBar, this.vRail.ops);
                 this.merge(this.ops.hBar, this.hRail.ops);
-                this.merge(this.scrollContentStyle, this.scrollContent.ops, false);
+                this.merge(this.ops.scrollContent, this.scrollContent.ops);
 
                 // extra set the padding px if true
                 if(this.scrollContent.ops.padding) {
@@ -539,7 +546,7 @@
                         properties.push('paddingRight');
                     }
                     values.push(this.vRail.ops.width);
-                    this.scrollContent.ops[properties[0]] = values[0];
+                    this.scrollContent.state.style[properties[0]] = values[0];
                 }
             },
             merge(from, to, check) {
