@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.1.4
+ * @name: vuescroll 3.1.5
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -72,6 +72,40 @@
      */
     function getComputed(dom, property) {
         return window.getComputedStyle(dom).getPropertyValue(property);
+    }
+
+    /**
+     * @description deepCopy a object.
+     * 
+     * @param {any} source 
+     * @returns 
+     */
+    function deepCopy(source) { 
+        var result={};
+        for (var key in source) {
+              result[key] = typeof source[key]==='object'? deepCoyp(source[key]): source[key];
+           } 
+        return result; 
+    }
+
+    /**
+     * 
+     * @description deepMerge a object.
+     * @param {any} from 
+     * @param {any} to 
+     */
+    function deepMerge(from, to) {
+        for(var key in from) {
+            if(typeof from[key]==='object') {
+                if(!to[key]) {
+                    to[key] = {};
+                }
+                var temp = deepCopy(from[key]);
+                deepMerge(temp, to[key])
+            }else {
+                to[key] = from[key];
+            }
+        }
     }
 
     //scrollpanne
@@ -455,7 +489,8 @@
         },
         created() {
             // merge the global config
-            var config = this.$vuescrollConfig;
+            var config = {};
+            deepMerge(this.$vuescrollConfig,config);
 
             this.scrollContent.ops = config.scrollContent
             this.vRail.ops = config.vRail;
@@ -498,12 +533,12 @@
                 }
             },
             merge(from, to, check) {
-                for (key in from) {
-                    if (check === false) {
-                        this.$set(to, key, from[key]);
-                    } else if (Object.hasOwnProperty.call(to, key)) {
+                if (check === false) {
+                    for(var key in from) {
                         this.$set(to, key, from[key]);
                     }
+                } else {
+                    deepMerge(from, to);
                 }
             },
             initBarDrag() {
