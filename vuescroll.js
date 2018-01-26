@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.0
+ * @name: vuescroll 3.2.1
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -29,7 +29,10 @@
                    minHeight: '100%',
                    padding: false,//true,
                    boxSizing: 'border-box',
-                   tag: 'div'  
+                   tag: 'div',
+                   props: {
+
+                   }  
                 },
                 // 
                 vRail: {
@@ -140,7 +143,8 @@
             style.minHeight = '100%';
             return _c(vm.ops.tag, {
                 style: style,
-                class: "vuesSrollContent"
+                class: "vuesSrollContent",
+                props: vm.ops.props
             }, this.$slots.default);
         },
         props: {
