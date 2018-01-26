@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.1.5
+ * @name: vuescroll 3.1.6
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -136,6 +136,7 @@
         render: function(_c) {
             var vm = this;
             var style = vm.ops;
+            style.minHeight = '100%';
             return _c('div', {
                 style: style,
                 class: "vuesSrollContent"
