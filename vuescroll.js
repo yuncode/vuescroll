@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.1.0
+ * @name: vuescroll 3.1.2
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -27,7 +27,7 @@
                 // 
                 scrollContent: {
                    height: '100%',
-                   padding: true,
+                   padding: false,//true,
                    boxSizing: 'border-box'  
                 },
                 // 
@@ -35,7 +35,7 @@
                     width: '5px',
                     pos: 'left',
                     railBackground: "#a5d6a7",
-                    railOpacity: '0.5'
+                    railOpacity: 0//'0.5'
                 },
                 // 
                 vBar: {
@@ -51,7 +51,7 @@
                     height: '5px',
                     pos: 'bottom',
                     railBackground: "#a5d6a7",
-                    railOpacity: '0.5'
+                    railOpacity: 0//'0.5'
                 },
                 // 
                 hBar: {

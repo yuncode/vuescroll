@@ -10,6 +10,7 @@
     - [Vuescroll Options](#vuescroll-options)
     - [Scrollbar Options](#scrollbar-options)
     - [Event](#event)
+    - [Global Configuartion](#global-configuartion)
 - [Inspire](#inspire)
 - [Liscence](#liscence)
 ## What Is Vuescroll
@@ -128,7 +129,7 @@ Or if you are in the nodejs environment, install it by npm, and use it:
 option|defaultValue|description
 -----|------------|----
 ops|`{vBar:{},hBar:{}}`| **The configs of vBar and hBar**
-scrollContentStyle|`{}`| **The style config object of scrollContent e.g. {height:'100%'} or {padding: false},get rid of the padding of the scrollContent**
+scrollContentStyle|`{padding: false}`| **The style config object of scrollContent e.g. {height:'100%'} or {padding: false},get rid of the padding of the scrollContent**
 accuracy|`5`| **The accuracy determins that the scrollbar will show or not. e.g. If the scrollPanel and scrollContent has a difference of less than 5 px,the scrollbar will not show.**
 
 ### Scrollbar Options
@@ -142,13 +143,56 @@ pos|`left(vBar,vRail)/bottom/(hBar, hRail)`|**Set the position of vBar and vRail
 deltaY|`35`|**Set the distance you scroll the vertical scrollbar each time**
 keepShow|false|**Set whether the scrollbars  keep showing or not**
 opacity|1|**Set the scrollbar's  opacity when it shows**
-railOpacity|0.5|**Set the rail's  opacity**
+railOpacity|0|**Set the rail's  opacity**
 ### Event
 
 event|params|description
 -----|------------|----
 vscroll/hscroll|`bar,content,process`|Bar is the information about scrollbar, and content the the information about the scrollcontent, and the process show the progress of the scrolling.
 
+### Global Configuartion
+
+```javascript
+    // registry the globe setting
+    Vue.prototype.$vuescrollConfig = {
+        // 
+        scrollContent: {
+            height: '100%',
+            padding: false,//true,
+            boxSizing: 'border-box'  
+        },
+        // 
+        vRail: {
+            width: '5px',
+            pos: 'left',
+            railBackground: "#a5d6a7",
+            railOpacity: 0//'0.5'
+        },
+        // 
+        vBar: {
+            width: '5px',
+            background: '#4caf50',
+            deltaY: 30,
+            keepShow: false,
+            opacity: 1,
+            pos: 'left'
+        },
+        // 
+        hRail: {
+            height: '5px',
+            pos: 'bottom',
+            railBackground: "#a5d6a7",
+            railOpacity: 0//'0.5'
+        },
+        // 
+        hBar: {
+            height: '5px',
+            background: '#4caf50',
+            keepShow: false,
+            opacity: 1  
+        }
+    }
+```
 ## Inspire
 
 It's inpired by jquery [slimscroll](https://github.com/rochal/jQuery-slimScroll).
