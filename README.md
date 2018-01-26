@@ -129,7 +129,7 @@ Or if you are in the nodejs environment, install it by npm, and use it:
 option|defaultValue|description
 -----|------------|----
 ops|`{vBar:{},hBar:{}}`| **The configs of vBar and hBar**
-scrollContentStyle|`{padding: false, tag: 'div', props:{}}`| **The style config object of scrollContent e.g. {height:'100%'} or {padding: false},get rid of the padding of the scrollContent, tag means you can treat scrollcontent as other third-party component, e.g. {tag: 'v-layout'}, if you want to sent props to third party component, use the props, e.g. props:{row: true}**
+scrollContentStyle|`{padding: false, tag: 'div', props:{}, attrs: {}}`| **The style config object of scrollContent e.g. {height:'100%'} or {padding: false},get rid of the padding of the scrollContent, tag means you can treat scrollcontent as other third-party component, e.g. {tag: 'v-layout'}, if you want to sent props to third party component, use the props, e.g. props:{row: true}, the attrs opation is the same as props optioin**
 accuracy|`5`| **The accuracy determins that the scrollbar will show or not. e.g. If the scrollPanel and scrollContent has a difference of less than 5 px,the scrollbar will not show.**
 
 ### Scrollbar Options

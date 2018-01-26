@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.2
+ * @name: vuescroll 3.2.3
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -31,6 +31,9 @@
                    boxSizing: 'border-box',
                    tag: 'div',
                    props: {
+
+                   },
+                   attrs: {
 
                    }  
                 },
@@ -144,7 +147,8 @@
             return _c(vm.ops.tag, {
                 style: style,
                 class: "vuesSrollContent",
-                props: vm.ops.props
+                props: vm.ops.props,
+                attrs: vm.ops.attrs
             }, this.$slots.default);
         },
         props: {
