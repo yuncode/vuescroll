@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.1
+ * @name: vuescroll 3.2.2
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -87,7 +87,7 @@
     function deepCopy(source) { 
         var result={};
         for (var key in source) {
-              result[key] = typeof source[key]==='object'? deepCoyp(source[key]): source[key];
+              result[key] = typeof source[key]==='object'? deepCopy(source[key]): source[key];
            } 
         return result; 
     }
