@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.1.6
+ * @name: vuescroll 3.1.7
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -26,7 +26,7 @@
             Vue.prototype.$vuescrollConfig = {
                 // 
                 scrollContent: {
-                   height: '100%',
+                   minHeight: '100%',
                    padding: false,//true,
                    boxSizing: 'border-box'  
                 },
