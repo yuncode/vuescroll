@@ -1,4 +1,4 @@
-# vuescroll - A virtual scrollbar based on [vue.js](https://github.com/vuejs/vue) 2.X
+# vuescroll - A virtual scrollbar based on [vue.js](https://github.com/vuejs/vue) 2.X by wangyi
 
 - [What Is Vuescroll](#what-is-vuescroll)
 - [Demo](#demo)
@@ -17,8 +17,6 @@
 ## What Is Vuescroll
 
 vuescroll is a virtual scrollbar , that you can substitute vuescroll for native scrollbar, a virtual scrollbar is beautiful and easily controlled , it can make you website is unique , which compares with others that use the native scrollbar :).Vuescroll behaves just like native !
-
-> note: V3.0 add the rail component that the component can reach where you click on the rail !
 
 ## Demo
 
@@ -160,49 +158,46 @@ vscroll/hscroll|`bar,content,process`|Bar is the information about scrollbar, an
 
 ### Global Configuartion
 
+> To influence all the scrollbars , you can change the global vuescroll configs `Vue.prototype.$vuescrollConfig`
+
 ```javascript
-    // registry the globe setting
-    Vue.prototype.$vuescrollConfig = {
+    // The global config settings. Bar's widht/height or pos depend on the corresponding rail.
+    var GCF = {
         // 
         scrollContent: {
             tag: 'div',
             padding: true,
             props: {
-
             },
             attrs: {
-
-            }  
+            }
         },
         // 
         vRail: {
             width: '5px',
             pos: 'left',
             railBackground: "#a5d6a7",
-            railOpacity: 0//'0.5'
+            railOpacity: 0 //'0.5'
         },
         // 
         vBar: {
-            width: '5px',
             background: '#4caf50',
             deltaY: 30,
             keepShow: false,
             opacity: 1,
-            pos: 'left'
         },
         // 
         hRail: {
             height: '5px',
             pos: 'bottom',
             railBackground: "#a5d6a7",
-            railOpacity: 0//'0.5'
+            railOpacity: 0 //'0.5'
         },
         // 
         hBar: {
-            height: '5px',
             background: '#4caf50',
             keepShow: false,
-            opacity: 1  
+            opacity: 1
         }
     }
 ```
@@ -212,4 +207,4 @@ It's inpired by jquery [slimscroll](https://github.com/rochal/jQuery-slimScroll)
 
 ## Liscence
 
-**MIT** Hope you can enjoy of it.
+**MIT** 
