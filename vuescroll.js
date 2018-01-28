@@ -331,10 +331,10 @@
     var hScrollbar = {
         name: 'hScrollbar',
         computed: {
-            computedLeft() {
+            computedLeft: function() {
                 return this.state.left * 100;
             },
-            computedWidth() {
+            computedWidth: function() {
                 return this.state.width * 100
             }
         },
@@ -593,7 +593,7 @@
                     }
                 }
             },
-            wheel(e) {
+            wheel: function(e) {
                 var vm = this;
                 var delta = vm.ops.vBar.deltaY;
                 vm.isWheeling = true;
@@ -730,7 +730,7 @@
                 });
             }
         },
-        beforeCreate() {
+        beforeCreate: function() {
             if(this.$options.propsData.ops) {
                 var ops = deepMerge(GCF, {});
                 deepMerge(ops, this.$options.propsData.ops);
