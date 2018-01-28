@@ -144,7 +144,7 @@ attrs|`{}`|**The attrs opation is the same as props optioin**
 vBar/hBar|defaultValue|description
 -----|------------|----
 background|`#4caf50`|**Set the scrollbar's background**
-deltaY(only for vBar)|`35`|**Set the distance you scroll the vertical scrollbar each time**
+deltaY(only for vBar)|`100`|**Set the distance you scroll the vertical scrollbar each time**
 keepShow|false|**Set whether the scrollbars  keep showing or not**
 opacity|1|**Set the scrollbar's  opacity when it shows**
 
@@ -189,7 +189,7 @@ vscroll/hscroll|`bar,content,process`|Bar is the information about scrollbar, an
         // 
         vBar: {
             background: '#4caf50',
-            deltaY: 30,
+            deltaY: 100,
             keepShow: false,
             opacity: 1,
         },

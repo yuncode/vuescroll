@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.7
+ * @name: vuescroll 3.2.8
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -49,7 +49,7 @@
             width: '5px',
             pos: 'left',
             background: '#4caf50',
-            deltaY: 35,
+            deltaY: 100,
             keepShow: false,
             opacity: 1,
         },
@@ -133,7 +133,6 @@
                 style: {
                     overflow: 'scroll',
                     marginRight: '-17px',
-                    marginBottom: '-17px',
                     height: 'calc(100% + 17px)'
                 },
                 class: "vueScrollPanel",
@@ -642,12 +641,17 @@
                 var content = {};
                 var bar = {};
                 var process = "";
-                content.residual = (scrollPanelScrollValue - ScrollDirectionValue - scrollPanelPropertyValue);
+                var extra = 0;
+                if (type == 'vScrollbar') {
+                    extra = 17;
+                }
+                ScrollDirectionValue = this.scrollPanel.el['scroll' + upperCaseDirection];
+                content.residual = (scrollPanelScrollValue - ScrollDirectionValue - scrollPanelPropertyValue - extra);
                 content.scrolled = ScrollDirectionValue;
                 bar.scrolled = this[type].state[direction];
                 bar.residual = (content.residual / scrollPanelScrollValue) * scrollPanelPropertyValue;
                 bar[property] = this[type].state[property] * scrollPanelPropertyValue;
-                process = ScrollDirectionValue / (scrollPanelScrollValue - scrollPanelPropertyValue);
+                process = ScrollDirectionValue / (scrollPanelScrollValue - scrollPanelPropertyValue - extra);
                 bar.name = type;
                 content.name = "content";
                 this.$emit(event, bar, content, process);
