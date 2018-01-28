@@ -40,26 +40,27 @@
                 </vue-scroll>
             </div>
             
-            <input type="radio" id="one" value="right" v-model="ops.vBar.pos">
+            <input type="radio" id="one" value="right" v-model="ops.vRail.pos">
             <label for="one">One</label>
             <br>
-            <input type="radio" id="two" value="left" v-model="ops.vBar.pos">
+            <input type="radio" id="two" value="left" v-model="ops.vRail.pos">
             <label for="two">Two</label>
             <br>
             <span>Picked: {{ ops.vBar.pos }}</span>
         </div>
         <script>
-            Vue.prototype.$vuescrollConfig.hBar.background = "#000";
-            Vue.prototype.$vuescrollConfig.scrollContent.padding = true;
+            
             var vm = new Vue({
                 el: '#app',
                 data: {
                     ops: {
                         vBar: {
-                            pos:'left',
                             deltaY: 10
                         },
                         hBar: {
+                        },
+                        vRail: {
+                            pos:'left'
                         }
                     }
                 },

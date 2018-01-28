@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.6
+ * @name: vuescroll 3.2.7
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -41,13 +41,15 @@
         vRail: {
             width: '5px',
             pos: 'left',
-            railBackground: "#a5d6a7",
-            railOpacity: 0 //'0.5'
+            background: "#a5d6a7",
+            opacity: 0 //'0.5'
         },
         // 
         vBar: {
+            width: '5px',
+            pos: 'left',
             background: '#4caf50',
-            deltaY: 30,
+            deltaY: 35,
             keepShow: false,
             opacity: 1,
         },
@@ -55,11 +57,13 @@
         hRail: {
             height: '5px',
             pos: 'bottom',
-            railBackground: "#a5d6a7",
-            railOpacity: 0 //'0.5'
+            background: "#a5d6a7",
+            opacity: 0 //'0.5'
         },
         // 
         hBar: {
+            height: '5px',
+            pos: 'bottom',
             background: '#4caf50',
             keepShow: false,
             opacity: 1
@@ -110,6 +114,14 @@
             }
         }
         return to;
+    }
+
+    function defineReactive(target, key, source) {
+        Object.defineProperty(target, key, {
+            get: function() {
+                return source[key];
+            }
+        })
     }
 
     //scrollpanne
@@ -167,8 +179,8 @@
                 top: 0,
                 height: '100%',
                 width: vm.ops.width,
-                background: vm.ops.railBackground,
-                opacity: vm.ops.railOpacity,
+                background: vm.ops.background,
+                opacity: vm.ops.opacity,
                 borderRadius: '4px'
             };
             // determine the position
@@ -195,7 +207,7 @@
                 pos: {
                     default: 'left'
                 },
-                railBackground: {
+                background: {
                     default: '#a5d6a7'
                 },
                 opacity: {
@@ -278,8 +290,8 @@
                 left: 0,
                 width: '100%',
                 height: vm.ops.height,
-                background: vm.ops.railBackground,
-                opacity: vm.ops.railOpacity,
+                background: vm.ops.background,
+                opacity: vm.ops.opacity,
                 borderRadius: '4px'
             };
             // determine the position
@@ -306,7 +318,7 @@
                 pos: {
                     default: 'bottom'
                 },
-                railBackground: {
+                background: {
                     default: '#a5d6a7'
                 },
                 opacity: {
@@ -720,11 +732,11 @@
         beforeCreate() {
             if(this.$options.propsData.ops) {
                 var ops = deepMerge(GCF, {});
-                ops.vBar.pos = ops.vRail.pos;
-                ops.vBar.width = ops.vRail.width;
-                ops.hBar.pos = ops.hRail.pos;
-                ops.hBar.height = ops.hRail.height;
                 deepMerge(ops, this.$options.propsData.ops);
+                defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
+                defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
+                defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
+                defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
             };
         },
         beforeDestroy: function() {

@@ -10,6 +10,7 @@
     - [Vuescroll Options](#vuescroll-options)
     - [ScrollContent Options](#scrollcontent-options)
     - [Scrollbar Options](#scrollbar-options)
+    - [Rail Options](#rail-options)
     - [Event](#event)
     - [Global Configuartion](#global-configuartion)
 - [Inspire](#inspire)
@@ -143,13 +144,19 @@ attrs|`{}`|**The attrs opation is the same as props optioin**
 vBar/hBar|defaultValue|description
 -----|------------|----
 background|`#4caf50`|**Set the scrollbar's background**
-railBackground|`#a5d6a7`|**Set the rail's background**
-width|`5px`|**Set the scrollbar and the rail's width**
-pos|`left(vBar,vRail)/bottom/(hBar, hRail)`|**Set the position of vBar and vRail or hBar and hRail**
-deltaY|`35`|**Set the distance you scroll the vertical scrollbar each time**
+deltaY(only for vBar)|`35`|**Set the distance you scroll the vertical scrollbar each time**
 keepShow|false|**Set whether the scrollbars  keep showing or not**
 opacity|1|**Set the scrollbar's  opacity when it shows**
-railOpacity|0|**Set the rail's  opacity**
+
+### Rail Options
+
+vRail/hRail|defaultValue|description
+-----|------------|----
+background|`#a5d6a7`|**Set the rail's background**
+width|`5px`|**Set the scrollbar and the rail's width**
+pos|`left(vBar,vRail)/bottom/(hBar, hRail)`|**Set the position of vBar and vRail or hBar and hRail**
+opacity|0|**Set the rail's  opacity**
+
 ### Event
 
 event|params|description
