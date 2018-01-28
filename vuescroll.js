@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.11
+ * @name: vuescroll 3.2.12
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -85,14 +85,14 @@
      * @param {any} source 
      * @returns 
      */
-    function deepCopy(source) {
-        var result = {};
+    function deepCopy(source, target) {
+        target = typeof target === 'object'&&target || {};
         for (var key in source) {
-            result[key] = typeof source[key] === 'object' ? deepCopy(source[key]) : source[key];
+            target[key] = typeof source[key] === 'object' ? deepCopy(source[key], target[key] = {}) : source[key];
         }
-        return result;
+        return target;
     }
-
+    
     /**
      * 
      * @description deepMerge a object.
@@ -103,8 +103,8 @@
         for (var key in from) {
             if (typeof from[key] === 'object') {
                 if (!to[key]) {
-                    var temp = deepCopy(from[key]);
-                    to[key] = from[key];
+                    to[key] = {};
+                    deepCopy(from[key], to[key])
                 } else {
                     deepMerge(from[key], to[key]);
                 }
