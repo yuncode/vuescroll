@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.9
+ * @name: vuescroll 3.2.10
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -745,6 +745,9 @@
             this.listeners.forEach(function(item) {
                 item.dom.removeEventListener(item.type, item.event);
             });
+        },
+        updated: function() {
+            this.showBar();
         },
         props: {
             ops:{
