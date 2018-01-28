@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.5
+ * @name: vuescroll 3.2.6
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -128,6 +128,9 @@
                 on: {
                     scroll: function(e) {
                         vm.$emit('scrolling', e);
+                    },
+                    wheel: function(e) {
+                        vm.$emit('wheeling', e);
                     }
                 }
             }, this.$slots.default);
@@ -413,7 +416,7 @@
                 listeners: [],
                 mousedown: false,
                 isMouseLeavePanel: true,
-                globalConf: ""
+                isWheeling: false
             }
         },
         render: function(_c) {
@@ -445,7 +448,8 @@
                 porps: {
                 },
                 on: {
-                    scrolling: vm.scroll
+                    scrolling: vm.scroll,
+                    wheeling: vm.wheel
                 }
             }, [_c('vuesSrollContent', {
                 props: {
@@ -578,9 +582,23 @@
                     }
                 }
             },
+            wheel(e) {
+                var vm = this;
+                var delta = vm.ops.vBar.deltaY;
+                vm.isWheeling = true;
+                vm.showVBar();
+                vm.scrollBar(e.deltaY > 0 ? delta : -delta, 'vScrollbar');
+                e.preventDefault();
+                e.stopPropagation();
+            },
             // listen wheel scrolling
             scroll: function(e) {
                 // console.log(e);
+                if(this.isWheeling) {
+                    e.preventDefault();
+                    this.isWheeling = false;
+                    return;
+                }
                 this.showBar();
             },
             // scroll content and resize bar.

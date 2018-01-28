@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.0.0
+ * @name: vuescroll 3.2.6
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -17,12 +17,54 @@
             Vue.component(vScrollbar.name, vScrollbar);
             Vue.component(hRail.name, hRail);
             Vue.component(hScrollbar.name, hScrollbar);
+            Vue.component(vuesSrollContent.name, vuesSrollContent);
             Vue.component(vueScrollPanel.name, vueScrollPanel);
             //vueScroll
             Vue.component(vueScroll.name, vueScroll);
+
+            // registry the globe setting
+            Vue.prototype.$vuescrollConfig = GCF
         }
     };
 
+    var GCF = {
+        // 
+        scrollContent: {
+            tag: 'div',
+            padding: true,
+            props: {
+            },
+            attrs: {
+            }
+        },
+        // 
+        vRail: {
+            width: '5px',
+            pos: 'left',
+            railBackground: "#a5d6a7",
+            railOpacity: 0 //'0.5'
+        },
+        // 
+        vBar: {
+            background: '#4caf50',
+            deltaY: 30,
+            keepShow: false,
+            opacity: 1,
+        },
+        // 
+        hRail: {
+            height: '5px',
+            pos: 'bottom',
+            railBackground: "#a5d6a7",
+            railOpacity: 0 //'0.5'
+        },
+        // 
+        hBar: {
+            background: '#4caf50',
+            keepShow: false,
+            opacity: 1
+        }
+    }
     /**
      * @description return the computed value of a dom
      * @author wangyi7099
@@ -33,20 +75,84 @@
         return window.getComputedStyle(dom).getPropertyValue(property);
     }
 
+    /**
+     * @description deepCopy a object.
+     * 
+     * @param {any} source 
+     * @returns 
+     */
+    function deepCopy(source) {
+        var result = {};
+        for (var key in source) {
+            result[key] = typeof source[key] === 'object' ? deepCopy(source[key]) : source[key];
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @description deepMerge a object.
+     * @param {any} from 
+     * @param {any} to 
+     */
+    function deepMerge(from, to) {
+        for (var key in from) {
+            if (typeof from[key] === 'object') {
+                if (!to[key]) {
+                    var temp = deepCopy(from[key]);
+                    to[key] = from[key];
+                } else {
+                    deepMerge(from[key], to[key]);
+                }
+            } else {
+                if(!to[key])
+                to[key] = from[key]
+            }
+        }
+        return to;
+    }
+
     //scrollpanne
     var vueScrollPanel = {
         name: 'vueScrollPanel',
         render: function(_c) {
             var vm = this;
-            var style = vm.scrollContentStyle;
-            style.overflow = 'hidden';
             return _c('div', {
-                style: style,
-                class: "vueScrollPanel"
+                style: {
+                    overflow: 'scroll',
+                    marginRight: '-17px',
+                    marginBottom: '-17px',
+                    height: 'calc(100% + 17px)'
+                },
+                class: "vueScrollPanel",
+                on: {
+                    scroll: function(e) {
+                        vm.$emit('scrolling', e);
+                    },
+                    wheel: function(e) {
+                        vm.$emit('wheeling', e);
+                    }
+                }
+            }, this.$slots.default);
+        }
+    }
+
+    // scrollContent
+    var vuesSrollContent = {
+        name: 'vuesSrollContent',
+        render: function(_c) {
+            var vm = this;
+
+            return _c(vm.ops.tag, {
+                style: vm.state.style,
+                class: "vuesSrollContent",
+                props: vm.ops.props,
+                attrs: vm.ops.attrs
             }, this.$slots.default);
         },
         props: {
-            scrollContentStyle: {
+            ops: {},
+            state: {
             }
         }
     }
@@ -62,7 +168,7 @@
                 height: '100%',
                 width: vm.ops.width,
                 background: vm.ops.railBackground,
-                opacity: '0.2',
+                opacity: vm.ops.railOpacity,
                 borderRadius: '4px'
             };
             // determine the position
@@ -77,7 +183,7 @@
                 on: {
                     "click": function(e) {
                         vm.$emit('scrollContentByBar', e, 'vScrollbar');
-                    } 
+                    }
                 }
             }, this.$slots.default);
         },
@@ -90,7 +196,10 @@
                     default: 'left'
                 },
                 railBackground: {
-                    default: '#fff'
+                    default: '#a5d6a7'
+                },
+                opacity: {
+                    default: '0.5'
                 }
             }
         }
@@ -166,11 +275,11 @@
             var vm = this;
             var style = {
                 position: 'absolute',
-                left:0,
+                left: 0,
                 width: '100%',
                 height: vm.ops.height,
                 background: vm.ops.railBackground,
-                opacity: '0.2',
+                opacity: vm.ops.railOpacity,
                 borderRadius: '4px'
             };
             // determine the position
@@ -185,7 +294,7 @@
                 on: {
                     "click": function(e) {
                         vm.$emit('scrollContentByBar', e, 'hScrollbar');
-                    } 
+                    }
                 }
             }, this.$slots.default);
         },
@@ -198,7 +307,10 @@
                     default: 'bottom'
                 },
                 railBackground: {
-                    default: '#fff'
+                    default: '#a5d6a7'
+                },
+                opacity: {
+                    default: '0.5'
                 }
             }
         }
@@ -266,33 +378,24 @@
     }
     var vueScroll = {
         name: "vueScroll",
-        data() {
+        data: function() {
             return {
                 scrollPanel: {
                     el: "",
-                    ops: {
-                        paddingLeft: '5px',
-                        paddingBottom: '5px',
-                        boxSizing: 'border-box'
+
+                },
+                scrollContent: {
+                    state: {
+                        style: {
+                            minHeight: '100%',
+                            boxSizing: 'border-box',
+                        }
                     }
                 },
                 vRail: {
-                    ops: {
-                        width: '5px',
-                        pos: 'left',
-                        railBackground: "#fff"
-                    }
                 },
                 vScrollbar: {
                     el: "",
-                    ops: {
-                        width: '5px',
-                        background: 'hsla(220,4%,58%,.3)',
-                        deltaY: 30,
-                        keepShow: false,
-                        opacity: 1,
-                        pos: 'left'
-                    },
                     state: {
                         top: 0,
                         height: 0,
@@ -300,20 +403,9 @@
                     }
                 },
                 hRail: {
-                    ops: {
-                        height: '5px',
-                        pos: 'bottom',
-                        railBackground: "#fff"
-                    }
                 },
                 hScrollbar: {
                     el: "",
-                    ops: {
-                        height: '5px',
-                        background: 'hsla(220,4%,58%,.3)',
-                        keepShow: false,
-                        opacity: 1
-                    },
                     state: {
                         left: 0,
                         width: 0,
@@ -323,7 +415,8 @@
                 },
                 listeners: [],
                 mousedown: false,
-                isMouseLeavePanel: true
+                isMouseLeavePanel: true,
+                isWheeling: false
             }
         },
         render: function(_c) {
@@ -333,10 +426,10 @@
                 style: {
                     position: 'relative',
                     height: '100%',
-                    width: '100%'
+                    width: '100%',
+                    overflow: 'hidden'
                 },
                 on: {
-                    wheel: vm.wheel,
                     mouseenter: function() {
                         vm.isMouseLeavePanel = false;
                         vm.showBar();
@@ -352,88 +445,82 @@
                 },
             }, [_c('vueScrollPanel', {
                 ref: 'vueScrollPanel',
-                props: {
-                    scrollContentStyle: vm.scrollContentStyle
-                }
-            }, vm.$slots.default), _c('vRail', {
-                props: {
-                    ops: vm.vRail.ops
+                porps: {
                 },
                 on: {
-                    scrollContentByBar:vm.scrollContentByBar
+                    scrolling: vm.scroll,
+                    wheeling: vm.wheel
+                }
+            }, [_c('vuesSrollContent', {
+                props: {
+                    ops: vm.ops.scrollContent,
+                    state: vm.scrollContent.state
+                }
+            }, vm.$slots.default)]), _c('vRail', {
+                props: {
+                    ops: vm.ops.vRail
+                },
+                on: {
+                    scrollContentByBar: vm.scrollContentByBar
                 }
             }), _c("vScrollbar", {
                 props: {
-                    ops: vm.vScrollbar.ops,
+                    ops: vm.ops.vBar,
                     state: vm.vScrollbar.state
                 },
                 ref: "vScrollbar"
-            }) , _c('hRail', {
+            }), _c('hRail', {
                 props: {
-                    ops: vm.hRail.ops
+                    ops: vm.ops.hRail
                 },
                 on: {
-                    scrollContentByBar:vm.scrollContentByBar 
+                    scrollContentByBar: vm.scrollContentByBar
                 }
             }), _c('hScrollbar', {
                 props: {
-                    ops: vm.hScrollbar.ops,
+                    ops: vm.ops.hBar,
                     state: vm.hScrollbar.state
                 },
                 ref: "hScrollbar"
             })]);
         },
-        mounted() {
+        mounted: function() {
             this.initEl();
-            this.mergeAll();
+            this.initPadding();
             this.initBarDrag();
             this.listenPanelTouch();
             // showbar at init time
             this.showBar();
         },
         methods: {
-            initEl() {
+            initEl: function() {
                 this.scrollPanel.el = this.$refs['vueScrollPanel'] && this.$refs['vueScrollPanel'].$el;
                 this.vScrollbar.el = this.$refs['vScrollbar'] && this.$refs['vScrollbar'].$el;
                 this.hScrollbar.el = this.$refs['hScrollbar'] && this.$refs['hScrollbar'].$el;
             },
-            mergeAll() {
-                this.merge(this.ops.vBar, this.vScrollbar.ops);
-                this.merge(this.ops.hBar, this.hScrollbar.ops);
-                this.merge(this.ops.vBar, this.vRail.ops);
-                this.merge(this.ops.hBar, this.hRail.ops);
-                this.merge(this.scrollContentStyle, this.scrollPanel.ops);
-
-                // extra set the padding px
-                var properties = [] ;
-                var values = [] ;
-                if(this.vRail.ops.pos == 'left') {
-                    properties.push('paddingLeft');
-                } else {
-                    properties.push('paddingRight');
-                }
-               
-                values.push(this.vRail.ops.width);
-                this.scrollContentStyle[properties[0]] = values[0];
-            },
-            merge(from, to, check) {
-                for (key in from) {
-                    if (check === false) {
-                        this.$set(to, key, from[key]);
-                    } else if (Object.hasOwnProperty.call(to, key)) {
-                        this.$set(to, key, from[key]);
+            initPadding: function() {
+                // extra set the padding px if true
+                if (this.ops.scrollContent.padding) {
+                    var properties = [];
+                    var values = [];
+                    if (this.ops.vRail.pos == 'left') {
+                        properties.push('paddingLeft');
+                    } else {
+                        properties.push('paddingRight');
                     }
+                    values.push(this.ops.vRail.width);
+                    this.scrollContent.state.style[properties[0]] = values[0];
                 }
             },
-            initBarDrag() {
-                var vScrollbar = this.listenBarDrag('vScrollbar'); 
+            initBarDrag: function() {
+                var vScrollbar = this.listenBarDrag('vScrollbar');
                 var hScrollbar = this.listenBarDrag('hScrollbar');
                 vScrollbar();
                 hScrollbar();
             },
             // get the bar height or width
-            getBarPropertyValue(type, scrollPanelPropertyValue, scrollPanelScrollPropertyValue) {
-                var property = type === 'vScrollbar'?'Height':'Width';
+            getBarPropertyValue: function(type, scrollPanelPropertyValue, scrollPanelScrollPropertyValue) {
+                var property = type === 'vScrollbar' ? 'Height' : 'Width';
                 // choose the proper height for scrollbar
                 var scrollPropertyValue = scrollPanelPropertyValue / scrollPanelScrollPropertyValue;
                 if ((scrollPanelScrollPropertyValue <= scrollPanelPropertyValue) || Math.abs(scrollPanelPropertyValue - scrollPanelScrollPropertyValue) <= this.accuracy) {
@@ -442,80 +529,77 @@
                 return scrollPropertyValue;
             },
             // adjust a bar's position
-            adjustBarPos(scrollPropertyValue, scrollPanelPropertyValue, scrollDirectionValue, scrollPanelScrollValue) {
+            adjustBarPos: function(scrollPropertyValue, scrollPanelPropertyValue, scrollDirectionValue, scrollPanelScrollValue) {
                 return parseFloat(scrollDirectionValue / scrollPanelPropertyValue);
             },
             // show All bar
-            showBar() {
+            showBar: function() {
                 this.showVBar();
                 this.showHBar();
             },
             // hide all bar
-            hideBar() {
+            hideBar: function() {
                 this.hideVBar();
                 this.hideHBar();
             },
             // showVbar
-            showVBar() {
-                if (!this.isMouseLeavePanel || this.vScrollbar.ops.keepShow || this.mousedown) {
-                    var scrollPanelPropertyValue = Math.floor(getComputed(this.scrollPanel.el, 'height').replace('px', ""));
+            showVBar: function() {
+                if (!this.isMouseLeavePanel || this.ops.vBar.keepShow || this.mousedown) {
+                    var scrollPanelPropertyValue = Math.floor(getComputed(this.scrollPanel.el, 'height').replace('px', "")) - 17;
                     var scrollPanelScrollPropertyValue = Math.floor(this.scrollPanel.el['scrollHeight']);
                     var scrollDirectionValue = Math.floor(this.scrollPanel.el['scrollTop']);
                     if ((this.vScrollbar.state.height = this.getBarPropertyValue('vScrollbar', scrollPanelPropertyValue, scrollPanelScrollPropertyValue))) {
-                        this.vScrollbar.state.top = 
-                        this.adjustBarPos(
-                            this.vScrollbar.state.height, 
-                            scrollPanelPropertyValue - 0, 
-                            scrollDirectionValue,
-                            scrollPanelScrollPropertyValue
-                        );
-                        this.vScrollbar.state.opacity = this.vScrollbar.ops.opacity;
+                        this.vScrollbar.state.top = this.adjustBarPos(this.vScrollbar.state.height, scrollPanelPropertyValue - 0, scrollDirectionValue, scrollPanelScrollPropertyValue);
+                        this.vScrollbar.state.opacity = this.ops.vBar.opacity;
                     }
                 }
             },
             // showHbar
-            showHBar() {
-                if (!this.isMouseLeavePanel || this.vScrollbar.ops.keepShow || this.mousedown) {
+            showHBar: function() {
+                if (!this.isMouseLeavePanel || this.ops.hBar.keepShow || this.mousedown) {
                     var scrollPanelPropertyValue = Math.floor(getComputed(this.scrollPanel.el, 'width').replace('px', ""));
                     var scrollPanelScrollPropertyValue = Math.floor(this.scrollPanel.el['scrollWidth']);
                     var scrollDirectionValue = Math.floor(this.scrollPanel.el['scrollLeft']);
                     if ((this.hScrollbar.state.width = this.getBarPropertyValue('hScrollbar', scrollPanelPropertyValue, scrollPanelScrollPropertyValue))) {
-                        this.hScrollbar.state.left = 
-                        this.adjustBarPos(
-                            this.vScrollbar.state.width, 
-                            scrollPanelPropertyValue - 0, 
-                            scrollDirectionValue,
-                            scrollPanelScrollPropertyValue
-                        );
-                        this.hScrollbar.state.opacity = this.hScrollbar.ops.opacity;
+                        this.hScrollbar.state.left = this.adjustBarPos(this.vScrollbar.state.width, scrollPanelPropertyValue - 0, scrollDirectionValue, scrollPanelScrollPropertyValue);
+                        this.hScrollbar.state.opacity = this.ops.hBar.opacity;
                     }
                 }
             },
             // hideVbar
-            hideVBar() {
-                if (!this.vScrollbar.ops.keepShow) {
+            hideVBar: function() {
+                if (!this.ops.vBar.keepShow) {
                     if (!this.mousedown && this.isMouseLeavePanel) {
                         this.vScrollbar.state.opacity = 0;
                     }
                 }
             },
             // hideHbar
-            hideHBar() {
-                if (!this.hScrollbar.ops.keepShow) {
+            hideHBar: function() {
+                if (!this.ops.hBar.keepShow) {
                     if (!this.mousedown && this.isMouseLeavePanel) {
                         this.hScrollbar.state.opacity = 0;
                     }
                 }
             },
-            // listen wheel scrolling
             wheel(e) {
                 var vm = this;
-                var pos = e.deltaY > 0 ? 1 : -1;
-                if(Math.abs(e.deltaY) === 0) {
+                var delta = vm.ops.vBar.deltaY;
+                vm.isWheeling = true;
+                vm.showVBar();
+                vm.scrollBar(e.deltaY > 0 ? delta : -delta, 'vScrollbar');
+                e.preventDefault();
+                e.stopPropagation();
+            },
+            // listen wheel scrolling
+            scroll: function(e) {
+                // console.log(e);
+                if(this.isWheeling) {
+                    e.preventDefault();
+                    this.isWheeling = false;
                     return;
                 }
-                vm.scrollBar(pos * this.vScrollbar.ops.deltaY, 'vScrollbar');
-                e.stopPropagation();
+                this.showBar();
             },
             // scroll content and resize bar.
             scrollBar: function(distance, type) {
@@ -528,6 +612,9 @@
                 var showEvent = type == 'vScrollbar' ? 'showVBar' : 'showHBar';
                 var directionValue = this[type].state[direction];
                 var scrollPanelPropertyValue = getComputed(this.scrollPanel.el, property).replace('px', "");
+                if (type == 'vScrollbar') {
+                    scrollPanelPropertyValue = scrollPanelPropertyValue - 17;
+                }
                 var scrollPanelScrollValue = this.scrollPanel.el['scroll' + upperCaseProperty];
                 var scrollDirectionValue = this.scrollPanel.el['scroll' + upperCaseDirection];
                 var scrollPropertyValue = this[type].state[property];
@@ -554,20 +641,23 @@
                 this.$emit(event, bar, content, process);
             },
             // convert scrollbar's distance to content distance.
-            scrollContent(distance, type) {
+            _scrollContent: function(distance, type) {
                 var property = type == 'vScrollbar' ? 'height' : 'width';
                 var upperCaseProperty = type == 'vScrollbar' ? 'Height' : 'Width';
-                var scrollPanelPropertyValue = getComputed(this.scrollPanel.el, property).replace('px', "");
+                var scrollPanelPropertyValue = getComputed(this.scrollPanel.el, property).replace('px', "") - 17;
+                if (type == 'vScrollbar') {
+                    scrollPanelPropertyValue = scrollPanelPropertyValue - 17;
+                }
                 var scrollPanelScrollValue = this.scrollPanel.el['scroll' + upperCaseProperty];
                 var scrollContentDistance = scrollPanelScrollValue * (distance / scrollPanelPropertyValue);
                 this.scrollBar(scrollContentDistance, type);
             },
             // click the rail and trigger the scrollbar moving
-            scrollContentByBar(e , type) {
-                var coco = type === 'vScrollbar'?'y':'x';
+            scrollContentByBar: function(e, type) {
+                var coco = type === 'vScrollbar' ? 'y' : 'x';
                 var elementInfo = this[type].el.getBoundingClientRect();
                 var delta = e[coco] - elementInfo[coco] - elementInfo.height / 2;
-                this.scrollContent(delta, type);
+                this._scrollContent(delta, type);
             },
             listenBarDrag: function(type) {
                 var vm = this;
@@ -582,7 +672,7 @@
                         now = e[coordinate];
                         var delta = now - pre;
                         vm['show' + bar]();
-                        vm.scrollContent(delta, type);
+                        vm._scrollContent(delta, type);
                         pre = now;
                     }
                     function t(e) {
@@ -608,41 +698,14 @@
             listenPanelTouch: function() {
                 var vm = this;
                 var pannel = this.scrollPanel.el;
-                var x, y;
-                var _x, _y;
-                function move(e) {
-                    if (e.touches.length) {
-                        var touch = e.touches[0];
-                        _x = touch.pageX;
-                        _y = touch.pageY;
-                        var _delta = void 0;
-                        var _deltaX = _x - x;
-                        var _deltaY = _y - y;
-                        if (Math.abs(_deltaX) > Math.abs(_deltaY)) {
-                            _delta = -_deltaX;
-                            vm.scrollBar(_delta, 'hScrollbar');
-                        } else if (Math.abs(_deltaX) < Math.abs(_deltaY)) {
-                            _delta = -_deltaY;
-                            vm.scrollBar(_delta, 'vScrollbar');
-                        }
-                        
-                        x = _x;
-                        y = _y;
-                    }
-                }
                 function t(e) {
                     if (e.touches.length) {
                         e.stopPropagation();
-                        var touch = e.touches[0];
                         vm.mousedown = true;
-                        x = touch.pageX;
-                        y = touch.pageY;
                         vm.showBar();
-                        pannel.addEventListener('touchmove', move);
                         pannel.addEventListener('touchend', function(e) {
                             vm.mousedown = false;
                             vm.hideBar();
-                            pannel.removeEventListener('touchmove', move);
                         });
                     }
                 }
@@ -654,6 +717,16 @@
                 });
             }
         },
+        beforeCreate() {
+            if(this.$options.propsData.ops) {
+                var ops = deepMerge(GCF, {});
+                ops.vBar.pos = ops.vRail.pos;
+                ops.vBar.width = ops.vRail.width;
+                ops.hBar.pos = ops.hRail.pos;
+                ops.hBar.height = ops.hRail.height;
+                deepMerge(ops, this.$options.propsData.ops);
+            };
+        },
         beforeDestroy: function() {
             // remove the registryed event.
             this.listeners.forEach(function(item) {
@@ -661,22 +734,14 @@
             });
         },
         props: {
-            ops: {
+            ops:{
                 default: function() {
-                    return {
-                        vBar: {
-                        },
-                        hBar: {
-                        }
-                    }
-                }
-            },
-            scrollContentStyle: {
-                default: function() {
-                    return {
-                        width: '100%',
-                        height: '100%'
-                    }
+                    var ops = deepMerge(GCF, {});
+                    ops.vBar.pos = ops.vRail.pos;
+                    ops.vBar.width = ops.vRail.width;
+                    ops.hBar.pos = ops.hRail.pos;
+                    ops.hBar.height = ops.hRail.height;
+                    return ops;
                 }
             },
             accuracy: {
@@ -684,6 +749,5 @@
             }
         }
     }
-
     return scroll;
 });
