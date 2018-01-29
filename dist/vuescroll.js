@@ -1,5 +1,5 @@
 /*
-    * @name: vuescroll 3.3.1
+    * @name: vuescroll 3.3.2
     * @author: (c) 2018-2018 wangyi7099
     * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
     * @license: MIT
@@ -727,26 +727,24 @@ var vueScroll = {
         }
     },
     beforeCreate: function() {
-        if(this.$options.propsData.ops) {
-            var ops = deepMerge(GCF, {});
-            deepMerge(ops, this.$options.propsData.ops);
-            defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
-            defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
-            defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
-            defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-        }
+        this.$options.propsData.ops = this.$options.propsData.ops || {};
+        var ops = deepMerge(GCF, {});
+        deepMerge(ops, this.$options.propsData.ops);
+        defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
+        defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
+        defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
+        defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
     },
     // before the component updated, after the render() function,
     // we shoule also merge the data again
     beforeUpdate() {
-        if(this.$options.propsData.ops) {
+            this.$options.propsData.ops = this.$options.propsData.ops || {};
             var ops = deepMerge(GCF, {});
             deepMerge(ops, this.$options.propsData.ops);
             defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
             defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
             defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
             defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-        }
     },
     beforeDestroy: function() {
         // remove the registryed event.
