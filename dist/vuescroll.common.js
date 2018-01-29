@@ -1,5 +1,5 @@
 /*
-    * @name: vuescroll 3.3.4
+    * @name: vuescroll 3.3.6
     * @author: (c) 2018-2018 wangyi7099
     * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
     * @license: MIT
@@ -87,6 +87,7 @@ var GCF = {
      * @param {any} to 
      */
     function deepMerge(from, to) {
+        to = to || {};
         for (var key in from) {
             if (typeof from[key] === 'object') {
                 if (!to[key]) {
