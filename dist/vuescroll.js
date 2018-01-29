@@ -1,5 +1,5 @@
 /*
-    * @name: vuescroll 3.2.16
+    * @name: vuescroll 3.2.17
     * @author: (c) 2018-2018 wangyi7099
     * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
     * @license: MIT
@@ -7,9 +7,9 @@
     */
    
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('Vue')) :
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('Vue')) :
 	typeof define === 'function' && define.amd ? define(['Vue'], factory) :
-	(factory(global.Vue));
+	(global.vuescroll = factory(global.Vue));
 }(this, (function (Vue) { 'use strict';
 
 Vue = Vue && Vue.hasOwnProperty('default') ? Vue['default'] : Vue;
@@ -784,5 +784,7 @@ var scroll = {
 if(typeof Vue !== 'undefined') {
     Vue.use(scroll);
 }
+
+return scroll;
 
 })));

@@ -32,3 +32,5 @@ var scroll = {
 if(typeof Vue !== 'undefined') {
     Vue.use(scroll);
 }
+
+export default scroll;
