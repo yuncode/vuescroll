@@ -1,5 +1,5 @@
 /*
-    * @name: vuescroll 3.2.18
+    * @name: vuescroll 3.3.1
     * @author: (c) 2018-2018 wangyi7099
     * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
     * @license: MIT
@@ -239,7 +239,7 @@ var vueScrollContent = {
     name: 'vueScrollContent',
     render: function(_c) {
         var vm = this;
-
+        vm.state.style.height = vm.ops.height;
         return _c(vm.ops.tag, {
             style: vm.state.style,
             class: "vueScrollContent",
@@ -345,6 +345,7 @@ var GCF = {
     scrollContent: {
         tag: 'div',
         padding: true,
+        height: '100%',
         props: {
         },
         attrs: {
@@ -398,7 +399,7 @@ var vueScroll = {
                 state: {
                     style: {
                         minHeight: '100%',
-                        boxSizing: 'border-box',
+                        boxSizing: 'border-box'
                     }
                 }
             },
@@ -726,6 +727,18 @@ var vueScroll = {
         }
     },
     beforeCreate: function() {
+        if(this.$options.propsData.ops) {
+            var ops = deepMerge(GCF, {});
+            deepMerge(ops, this.$options.propsData.ops);
+            defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
+            defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
+            defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
+            defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
+        }
+    },
+    // before the component updated, after the render() function,
+    // we shoule also merge the data again
+    beforeUpdate() {
         if(this.$options.propsData.ops) {
             var ops = deepMerge(GCF, {});
             deepMerge(ops, this.$options.propsData.ops);

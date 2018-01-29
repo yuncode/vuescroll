@@ -1,15 +1,391 @@
+/*
+    * @name: vuescroll 3.3.1
+    * @author: (c) 2018-2018 wangyi7099
+    * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
+    * @license: MIT
+    * @GitHub: https://github.com/wangyi7099/vuescroll
+    */
+   
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var Vue = _interopDefault(require('Vue'));
+
+// vertical rail
+var vRail = {
+    name: 'vRail',
+    render: function(_c) {
+        var vm = this;
+        var style = {
+            position: 'absolute',
+            top: 0,
+            height: '100%',
+            width: vm.ops.width,
+            background: vm.ops.background,
+            opacity: vm.ops.opacity,
+            borderRadius: '4px'
+        };
+        // determine the position
+        if (vm.ops.pos == 'right') {
+            style['right'] = 0;
+        } else {
+            style['left'] = 0;
+        }
+
+        return _c('div', {
+            style: style,
+            on: {
+                "click": function(e) {
+                    vm.$emit('scrollContentByBar', e, 'vScrollbar');
+                }
+            }
+        }, this.$slots.default);
+    },
+    props: {
+        ops: {
+            width: {
+                default: '5px'
+            },
+            pos: {
+                default: 'left'
+            },
+            background: {
+                default: '#a5d6a7'
+            },
+            opacity: {
+                default: '0.5'
+            }
+        }
+    }
+}
+
+// vertical scrollBar
+var vScrollbar = {
+    name: 'vScrollbar',
+    computed: {
+        computedTop() {
+            return this.state.top * 100;
+        },
+        computedHeight() {
+            return this.state.height * 100
+        }
+    },
+    render: function(_c) {
+        var vm = this;
+        var style = {
+            position: 'absolute',
+            top: 0,
+            height: vm.computedHeight + '%',
+            width: vm.ops.width,
+            background: vm.ops.background,
+            borderRadius: '4px',
+            transform: "translateY(" + vm.computedTop + "%)",
+            transition: 'opacity .5s',
+            cursor: 'pointer',
+            opacity: vm.state.opacity,
+            userSelect: 'none'
+        };
+        // determine the position
+        if (vm.ops.pos == 'right') {
+            style['right'] = 0;
+        } else {
+            style['left'] = 0;
+        }
+
+        return _c('div', {
+            style: style,
+            class: "vScrollbar"
+        });
+    },
+    props: {
+        ops: {
+            default: {
+                background: 'hsla(220,4%,58%,.3)',
+                opacity: 0,
+                pos: 'left',
+                width: '5px'
+            }
+        },
+        state: {
+            default: {
+                top: {
+                    default: 0
+                },
+                height: {
+                    default: 0
+                },
+                opacity: {
+                    default: 0
+                }
+            }
+        }
+    }
+}
+
+// horizontal rail
+var hRail = {
+    name: 'hRail',
+    render: function(_c) {
+        var vm = this;
+        var style = {
+            position: 'absolute',
+            left: 0,
+            width: '100%',
+            height: vm.ops.height,
+            background: vm.ops.background,
+            opacity: vm.ops.opacity,
+            borderRadius: '4px'
+        };
+        // determine the position
+        if (vm.ops.pos == 'top') {
+            style['top'] = 0;
+        } else {
+            style['bottom'] = 0;
+        }
+
+        return _c('div', {
+            style: style,
+            on: {
+                "click": function(e) {
+                    vm.$emit('scrollContentByBar', e, 'hScrollbar');
+                }
+            }
+        }, this.$slots.default);
+    },
+    props: {
+        ops: {
+            height: {
+                default: '5px'
+            },
+            pos: {
+                default: 'bottom'
+            },
+            background: {
+                default: '#a5d6a7'
+            },
+            opacity: {
+                default: '0.5'
+            }
+        }
+    }
+}
+
+// horizontal scrollBar
+var hScrollbar = {
+    name: 'hScrollbar',
+    computed: {
+        computedLeft: function() {
+            return this.state.left * 100;
+        },
+        computedWidth: function() {
+            return this.state.width * 100
+        }
+    },
+    render: function(_c) {
+        var vm = this;
+        var style = {
+            position: 'absolute',
+            width: vm.computedWidth + '%',
+            height: vm.ops.height,
+            background: vm.ops.background,
+            borderRadius: '4px',
+            transform: "translateX(" + vm.computedLeft + "%)",
+            transition: 'opacity .5s',
+            cursor: 'pointer',
+            opacity: vm.state.opacity,
+            userSelect: 'none'
+        };
+        // determine the position
+        if (vm.ops.pos == 'top') {
+            style['top'] = 0;
+        } else {
+            style['bottom'] = 0;
+        }
+        return _c('div', {
+            style: style,
+            class: "hScrollbar"
+        });
+    },
+    props: {
+        ops: {
+            default: {
+                background: 'hsla(220,4%,58%,.3)',
+                opacity: 0,
+                pos: 'bottom',
+                height: '5px'
+            }
+        },
+        state: {
+            default: {
+                left: {
+                    default: 0
+                },
+                width: {
+                    default: 0
+                },
+                opacity: {
+                    default: 0
+                }
+            }
+        }
+    }
+}
+
+// scrollContent
+var vueScrollContent = {
+    name: 'vueScrollContent',
+    render: function(_c) {
+        var vm = this;
+        vm.state.style.height = vm.ops.height;
+        return _c(vm.ops.tag, {
+            style: vm.state.style,
+            class: "vueScrollContent",
+            props: vm.ops.props,
+            attrs: vm.ops.attrs
+        }, this.$slots.default);
+    },
+    props: {
+        ops: {},
+        state: {
+        }
+    }
+}
+
+// vueScrollPanel
+var vueScrollPanel = {
+    name: 'vueScrollPanel',
+    render: function(_c) {
+        var vm = this;
+        return _c('div', {
+            style: {
+                overflow: 'scroll',
+                marginRight: '-17px',
+                height: 'calc(100% + 17px)'
+            },
+            class: "vueScrollPanel",
+            on: {
+                scroll: function(e) {
+                    vm.$emit('scrolling', e);
+                },
+                wheel: function(e) {
+                    vm.$emit('wheeling', e);
+                }
+            }
+        }, this.$slots.default);
+    }
+}
+
+/**
+     * @description return the computed value of a dom
+     * @author wangyi7099
+     * @param {any} dom 
+     * @param {any} property 
+     */
+    function getComputed(dom, property) {
+        return window.getComputedStyle(dom).getPropertyValue(property);
+    }
+
+    /**
+     * @description deepCopy a object.
+     * 
+     * @param {any} source 
+     * @returns 
+     */
+    function deepCopy(source, target) {
+        target = typeof target === 'object'&&target || {};
+        for (var key in source) {
+            target[key] = typeof source[key] === 'object' ? deepCopy(source[key], target[key] = {}) : source[key];
+        }
+        return target;
+    }
+    
+    /**
+     * 
+     * @description deepMerge a object.
+     * @param {any} from 
+     * @param {any} to 
+     */
+    function deepMerge(from, to) {
+        for (var key in from) {
+            if (typeof from[key] === 'object') {
+                if (!to[key]) {
+                    to[key] = {};
+                    deepCopy(from[key], to[key]);
+                } else {
+                    deepMerge(from[key], to[key]);
+                }
+            } else {
+                if(!to[key])
+                to[key] = from[key];
+            }
+        }
+        return to;
+    }
+    /**
+     * @description define a object reactive
+     * @author wangyi
+     * @export
+     * @param {any} target 
+     * @param {any} key 
+     * @param {any} source 
+     */
+    function defineReactive(target, key, source) {
+        Object.defineProperty(target, key, {
+            get: function() {
+                return source[key];
+            }
+        });
+    }
+
+var GCF = {
+    // 
+    scrollContent: {
+        tag: 'div',
+        padding: true,
+        height: '100%',
+        props: {
+        },
+        attrs: {
+        }
+    },
+    // 
+    vRail: {
+        width: '5px',
+        pos: 'left',
+        background: "#a5d6a7",
+        opacity: 0 //'0.5'
+    },
+    // 
+    vBar: {
+        width: '5px',
+        pos: 'left',
+        background: '#4caf50',
+        deltaY: 100,
+        keepShow: false,
+        opacity: 1,
+    },
+    // 
+    hRail: {
+        height: '5px',
+        pos: 'bottom',
+        background: "#a5d6a7",
+        opacity: 0 //'0.5'
+    },
+    // 
+    hBar: {
+        height: '5px',
+        pos: 'bottom',
+        background: '#4caf50',
+        keepShow: false,
+        opacity: 1
+    }
+}
+
 // vuescroll core module
 
-import {
-    getComputed,
-    deepMerge
-} from './util'
-
 // import config
-import GCF from './GlobalConfig'
-import {defineReactive} from './util'
-
-export default  {
+var vueScroll = {
     name: "vueScroll",
     data: function() {
         return {
@@ -153,8 +529,6 @@ export default  {
         },
         // get the bar height or width
         getBarPropertyValue: function(type, scrollPanelPropertyValue, scrollPanelScrollPropertyValue) {
-            var property = type === 'vScrollbar' ? 'Height' : 'Width';
-            // choose the proper height for scrollbar
             var scrollPropertyValue = scrollPanelPropertyValue / scrollPanelScrollPropertyValue;
             if ((scrollPanelScrollPropertyValue <= scrollPanelPropertyValue) || Math.abs(scrollPanelPropertyValue - scrollPanelScrollPropertyValue) <= this.accuracy) {
                 scrollPropertyValue = 0;
@@ -279,7 +653,7 @@ export default  {
         _scrollContent: function(distance, type) {
             var property = type == 'vScrollbar' ? 'height' : 'width';
             var upperCaseProperty = type == 'vScrollbar' ? 'Height' : 'Width';
-            var scrollPanelPropertyValue = getComputed(this.scrollPanel.el, property).replace('px', "")  ;
+            var scrollPanelPropertyValue = getComputed(this.scrollPanel.el, property).replace('px', "");
             if (type == 'vScrollbar') {
                 scrollPanelPropertyValue = scrollPanelPropertyValue  ;
             }
@@ -298,8 +672,6 @@ export default  {
             var vm = this;
             var coordinate = type === 'vScrollbar' ? 'pageY' : 'pageX';
             var bar = type === 'vScrollbar' ? 'VBar' : 'HBar';
-            var scrollProperty = type === 'vScrollbar' ? 'scrollHeight' : 'scrollWidth';
-            var property = type === 'vScrollbar' ? 'height' : 'width';
             return function() {
                 var pre;
                 var now;
@@ -360,7 +732,7 @@ export default  {
             defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
             defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
             defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-        };
+        }
     },
     // before the component updated, after the render() function,
     // we shoule also merge the data again
@@ -372,7 +744,7 @@ export default  {
             defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
             defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
             defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-        };
+        }
     },
     beforeDestroy: function() {
         // remove the registryed event.
@@ -400,3 +772,28 @@ export default  {
         }
     }
 }
+
+// import component
+// import config
+// external Vue
+var scroll = {
+    install: function(Vue$$1) {
+        Vue$$1.component(vRail.name, vRail);
+        Vue$$1.component(vScrollbar.name, vScrollbar);
+        Vue$$1.component(hRail.name, hRail);
+        Vue$$1.component(hScrollbar.name, hScrollbar);
+        Vue$$1.component(vueScrollContent.name, vueScrollContent);
+        Vue$$1.component(vueScrollPanel.name, vueScrollPanel);
+        //vueScroll
+        Vue$$1.component(vueScroll.name, vueScroll);
+
+        // registry the globe setting
+        Vue$$1.prototype.$vuescrollConfig = GCF;
+    }
+};
+
+if(typeof Vue !== 'undefined') {
+    Vue.use(scroll);
+}
+
+module.exports = scroll;

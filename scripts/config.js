@@ -45,9 +45,17 @@ const builds = {
   'web-full-esm': {
     entry: resolve('src/index.esm.js'),
     dest: resolve('dist/vuescroll.esm.js'),
-    format: 'cjs',
+    format: 'es',
     banner
   },
+  // Runtime+compiler CommonJS build (CommonJS)
+  'web-full-cjs': {
+    entry: resolve('src/index.js'),
+    dest: resolve('dist/vuescroll.common.js'),
+    format: 'cjs',
+    external: ['Vue'],
+    banner
+  }
 }
 
 function genConfig (name) {

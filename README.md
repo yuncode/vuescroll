@@ -135,6 +135,7 @@ accuracy|`5`| **The accuracy determins that the scrollbar will show or not. e.g.
 option|defaultValue|description
 -----|------------|----
 padding|`false`| **Set false to get rid of the padding of scroll content, otherwise, scroll content will have a padding of scrollbar's width of height**
+height|`100%`| **Set the scrollContent's height.**
 tag|`div`|**Setting tag means you can treat scrollcontent as other third-party component, e.g. {tag: 'v-layout'}**
 props|`{}`|**If you want to sent props to third party component, use the props, e.g. props:{someProp: true}**
 attrs|`{}`|**The attrs opation is the same as props optioin**
@@ -177,7 +178,8 @@ vscroll/hscroll|`bar,content,process`|Bar is the information about scrollbar, an
             props: {
             },
             attrs: {
-            }
+            },
+            height: '100%'
         },
         // 
         vRail: {
