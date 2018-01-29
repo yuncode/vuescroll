@@ -29,6 +29,7 @@
      * @param {any} to 
      */
     export function deepMerge(from, to) {
+        to = to || {};
         for (var key in from) {
             if (typeof from[key] === 'object') {
                 if (!to[key]) {
