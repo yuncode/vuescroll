@@ -1,5 +1,5 @@
 /*
-    * @name: vuescroll 3.3.2
+    * @name: vuescroll 3.3.3
     * @author: (c) 2018-2018 wangyi7099
     * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
     * @license: MIT
@@ -43,20 +43,24 @@ var vRail = {
         }, this.$slots.default);
     },
     props: {
-        ops: {
-            width: {
-                default: '5px'
-            },
-            pos: {
-                default: 'left'
-            },
-            background: {
-                default: '#a5d6a7'
-            },
-            opacity: {
-                default: '0.5'
+        ops:{
+            default: function() {
+                return {
+                    width: {
+                        default: '5px'
+                    },
+                    pos: {
+                        default: 'left'
+                    },
+                    background: {
+                        default: '#a5d6a7'
+                    },
+                    opacity: {
+                        default: '0.5'
+                    }
+                }
             }
-        }
+        } 
     }
 }
 
@@ -100,25 +104,29 @@ var vScrollbar = {
     },
     props: {
         ops: {
-            default: {
-                background: 'hsla(220,4%,58%,.3)',
-                opacity: 0,
-                pos: 'left',
-                width: '5px'
+            default: function(){
+                return {
+                    background: 'hsla(220,4%,58%,.3)',
+                    opacity: 0,
+                    pos: 'left',
+                    width: '5px'
+                } 
             }
         },
         state: {
-            default: {
-                top: {
-                    default: 0
-                },
-                height: {
-                    default: 0
-                },
-                opacity: {
-                    default: 0
+            default:function(){
+                return {
+                    top: {
+                        default: 0
+                    },
+                    height: {
+                        default: 0
+                    },
+                    opacity: {
+                        default: 0
+                    }
                 }
-            }
+            } 
         }
     }
 }
@@ -154,18 +162,20 @@ var hRail = {
         }, this.$slots.default);
     },
     props: {
-        ops: {
-            height: {
-                default: '5px'
-            },
-            pos: {
-                default: 'bottom'
-            },
-            background: {
-                default: '#a5d6a7'
-            },
-            opacity: {
-                default: '0.5'
+        ops: function(){
+            return {
+                height: {
+                    default: '5px'
+                },
+                pos: {
+                    default: 'bottom'
+                },
+                background: {
+                    default: '#a5d6a7'
+                },
+                opacity: {
+                    default: '0.5'
+                }
             }
         }
     }
@@ -209,23 +219,27 @@ var hScrollbar = {
     },
     props: {
         ops: {
-            default: {
-                background: 'hsla(220,4%,58%,.3)',
-                opacity: 0,
-                pos: 'bottom',
-                height: '5px'
+            default: function() {
+                return {
+                    background: 'hsla(220,4%,58%,.3)',
+                    opacity: 0,
+                    pos: 'bottom',
+                    height: '5px'
+                }   
             }
         },
         state: {
-            default: {
-                left: {
-                    default: 0
-                },
-                width: {
-                    default: 0
-                },
-                opacity: {
-                    default: 0
+            default: function(){
+                return {
+                    left: {
+                        default: 0
+                    },
+                    width: {
+                        default: 0
+                    },
+                    opacity: {
+                        default: 0
+                    }
                 }
             }
         }
@@ -246,8 +260,19 @@ var vueScrollContent = {
         }, this.$slots.default);
     },
     props: {
-        ops: {},
+        ops: {
+            default: function() {
+                return {
+
+                }
+            }
+        },
         state: {
+            default: function() {
+                return {
+                    
+                }
+            }
         }
     }
 }

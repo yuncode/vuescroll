@@ -38,25 +38,29 @@ export default  {
     },
     props: {
         ops: {
-            default: {
-                background: 'hsla(220,4%,58%,.3)',
-                opacity: 0,
-                pos: 'left',
-                width: '5px'
+            default: function(){
+                return {
+                    background: 'hsla(220,4%,58%,.3)',
+                    opacity: 0,
+                    pos: 'left',
+                    width: '5px'
+                } 
             }
         },
         state: {
-            default: {
-                top: {
-                    default: 0
-                },
-                height: {
-                    default: 0
-                },
-                opacity: {
-                    default: 0
+            default:function(){
+                return {
+                    top: {
+                        default: 0
+                    },
+                    height: {
+                        default: 0
+                    },
+                    opacity: {
+                        default: 0
+                    }
                 }
-            }
+            } 
         }
     }
 }

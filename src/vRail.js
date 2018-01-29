@@ -29,19 +29,23 @@ export default  {
         }, this.$slots.default);
     },
     props: {
-        ops: {
-            width: {
-                default: '5px'
-            },
-            pos: {
-                default: 'left'
-            },
-            background: {
-                default: '#a5d6a7'
-            },
-            opacity: {
-                default: '0.5'
+        ops:{
+            default: function() {
+                return {
+                    width: {
+                        default: '5px'
+                    },
+                    pos: {
+                        default: 'left'
+                    },
+                    background: {
+                        default: '#a5d6a7'
+                    },
+                    opacity: {
+                        default: '0.5'
+                    }
+                }
             }
-        }
+        } 
     }
 }

@@ -36,23 +36,27 @@ export default  {
     },
     props: {
         ops: {
-            default: {
-                background: 'hsla(220,4%,58%,.3)',
-                opacity: 0,
-                pos: 'bottom',
-                height: '5px'
+            default: function() {
+                return {
+                    background: 'hsla(220,4%,58%,.3)',
+                    opacity: 0,
+                    pos: 'bottom',
+                    height: '5px'
+                }   
             }
         },
         state: {
-            default: {
-                left: {
-                    default: 0
-                },
-                width: {
-                    default: 0
-                },
-                opacity: {
-                    default: 0
+            default: function(){
+                return {
+                    left: {
+                        default: 0
+                    },
+                    width: {
+                        default: 0
+                    },
+                    opacity: {
+                        default: 0
+                    }
                 }
             }
         }

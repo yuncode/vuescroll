@@ -12,8 +12,19 @@ export default  {
         }, this.$slots.default);
     },
     props: {
-        ops: {},
+        ops: {
+            default: function() {
+                return {
+
+                }
+            }
+        },
         state: {
+            default: function() {
+                return {
+                    
+                }
+            }
         }
     }
 }
