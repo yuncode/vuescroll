@@ -1,11 +1,16 @@
+import LifeCycleMix from './LifeCycleMix';
+
+
 // scrollContent
 export default  {
     name: 'scrollContent',
+    mixins: [LifeCycleMix],
     render: function(_c) {
         var vm = this;
-        vm.state.style.height = vm.ops.height;
+        var style = vm.state.style;
+        style.height = vm.ops.height;
         return _c(vm.ops.tag, {
-            style: vm.state.style,
+            style: style,
             class: "scrollContent",
             props: vm.ops.props,
             attrs: vm.ops.attrs

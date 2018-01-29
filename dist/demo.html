@@ -59,6 +59,7 @@
             <br>
             <input type="radio" id="two1" value="left" v-model="ops1.vRail.pos">
             <label for="two1">Two</label>
+            <button @click="f">test</button>
             <br>
          </div>
         <script>
@@ -76,6 +77,9 @@
                         },
                         vRail: {
                             pos:'right'
+                        },
+                        scrollContent: {
+                            padding: true
                         }
                     },
                     ops1: {
@@ -94,6 +98,9 @@
                     },
                     detectHBar(bar, content, process) {
                          console.log(bar, content, process);
+                    },
+                    f() {
+                        this.$forceUpdate();
                     }
                 }
             });
