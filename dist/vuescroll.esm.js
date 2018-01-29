@@ -6,13 +6,7 @@
     * @GitHub: https://github.com/wangyi7099/vuescroll
     */
    
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('Vue')) :
-	typeof define === 'function' && define.amd ? define(['Vue'], factory) :
-	(global.vuescroll = factory(global.Vue));
-}(this, (function (Vue) { 'use strict';
-
-Vue = Vue && Vue.hasOwnProperty('default') ? Vue['default'] : Vue;
+'use strict';
 
 // vertical rail
 var vRail = {
@@ -764,27 +758,20 @@ var vueScroll = {
 
 // import component
 // import config
-// external Vue
 var scroll = {
-    install: function(Vue$$1) {
-        Vue$$1.component(vRail.name, vRail);
-        Vue$$1.component(vScrollbar.name, vScrollbar);
-        Vue$$1.component(hRail.name, hRail);
-        Vue$$1.component(hScrollbar.name, hScrollbar);
-        Vue$$1.component(vueScrollContent.name, vueScrollContent);
-        Vue$$1.component(vueScrollPanel.name, vueScrollPanel);
+    install: function(Vue) {
+        Vue.component(vRail.name, vRail);
+        Vue.component(vScrollbar.name, vScrollbar);
+        Vue.component(hRail.name, hRail);
+        Vue.component(hScrollbar.name, hScrollbar);
+        Vue.component(vueScrollContent.name, vueScrollContent);
+        Vue.component(vueScrollPanel.name, vueScrollPanel);
         //vueScroll
-        Vue$$1.component(vueScroll.name, vueScroll);
+        Vue.component(vueScroll.name, vueScroll);
 
         // registry the globe setting
-        Vue$$1.prototype.$vuescrollConfig = GCF;
+        Vue.prototype.$vuescrollConfig = GCF;
     }
 };
 
-if(typeof Vue !== 'undefined') {
-    Vue.use(scroll);
-}
-
-return scroll;
-
-})));
+module.exports = scroll;

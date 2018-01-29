@@ -40,7 +40,14 @@ const builds = {
     env: 'production',
     external: ['Vue'],
     banner
-  }
+  },
+  // Runtime+compiler CommonJS build (ES Modules)
+  'web-full-esm': {
+    entry: resolve('src/index.esm.js'),
+    dest: resolve('dist/vuescroll.esm.js'),
+    format: 'cjs',
+    banner
+  },
 }
 
 function genConfig (name) {
