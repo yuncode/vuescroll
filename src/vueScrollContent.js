@@ -1,12 +1,12 @@
 // scrollContent
 export default  {
-    name: 'vueScrollContent',
+    name: 'scrollContent',
     render: function(_c) {
         var vm = this;
         vm.state.style.height = vm.ops.height;
         return _c(vm.ops.tag, {
             style: vm.state.style,
-            class: "vueScrollContent",
+            class: "scrollContent",
             props: vm.ops.props,
             attrs: vm.ops.attrs
         }, this.$slots.default);
@@ -22,7 +22,7 @@ export default  {
         state: {
             default: function() {
                 return {
-                    
+
                 }
             }
         }

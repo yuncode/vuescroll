@@ -6,9 +6,194 @@
     * @GitHub: https://github.com/wangyi7099/vuescroll
     */
    
+var GCF = {
+    // 
+    scrollContent: {
+        tag: 'div',
+        padding: true,
+        height: '100%',
+        props: {
+        },
+        attrs: {
+        }
+    },
+    // 
+    vRail: {
+        width: '5px',
+        pos: 'left',
+        background: "#a5d6a7",
+        opacity: 0 //'0.5'
+    },
+    // 
+    vBar: {
+        width: '5px',
+        pos: 'left',
+        background: '#4caf50',
+        deltaY: 100,
+        keepShow: false,
+        opacity: 1,
+    },
+    // 
+    hRail: {
+        height: '5px',
+        pos: 'bottom',
+        background: "#a5d6a7",
+        opacity: 0 //'0.5'
+    },
+    // 
+    hBar: {
+        height: '5px',
+        pos: 'bottom',
+        background: '#4caf50',
+        keepShow: false,
+        opacity: 1
+    }
+}
+
+/**
+     * @description return the computed value of a dom
+     * @author wangyi7099
+     * @param {any} dom 
+     * @param {any} property 
+     */
+    function getComputed(dom, property) {
+        return window.getComputedStyle(dom).getPropertyValue(property);
+    }
+
+    /**
+     * @description deepCopy a object.
+     * 
+     * @param {any} source 
+     * @returns 
+     */
+    function deepCopy(source, target) {
+        target = typeof target === 'object'&&target || {};
+        for (var key in source) {
+            target[key] = typeof source[key] === 'object' ? deepCopy(source[key], target[key] = {}) : source[key];
+        }
+        return target;
+    }
+    
+    /**
+     * 
+     * @description deepMerge a object.
+     * @param {any} from 
+     * @param {any} to 
+     */
+    function deepMerge(from, to) {
+        for (var key in from) {
+            if (typeof from[key] === 'object') {
+                if (!to[key]) {
+                    to[key] = {};
+                    deepCopy(from[key], to[key]);
+                } else {
+                    deepMerge(from[key], to[key]);
+                }
+            } else {
+                if(!to[key])
+                to[key] = from[key];
+            }
+        }
+        return to;
+    }
+    /**
+     * @description define a object reactive
+     * @author wangyi
+     * @export
+     * @param {any} target 
+     * @param {any} key 
+     * @param {any} source 
+     */
+    function defineReactive(target, key, source) {
+        Object.defineProperty(target, key, {
+            get: function() {
+                return source[key];
+            }
+        });
+    }
+
+var LifeCycleMix = {
+    beforeCreate: function() {
+        if(this.name === 'vueScroll') {
+            var ops = deepMerge(GCF[this.name], {});
+            deepMerge(ops, this.$options.propsData.ops);
+        }else {
+            this.$options.propsData.ops = this.$options.propsData.ops || {};
+        var ops = deepMerge(GCF[this.name], {});
+        deepMerge(ops, this.$options.propsData.ops);
+        if(this.name === 'vBar' || this.name === 'hBar') {
+            if(this.$parent.ops[this.name.charAt(0) + 'Rail']['pos']) {
+                defineReactive(this.$options.propsData.ops, 'pos', this.$parent.ops[this.name.charAt(0) + 'Rail']);
+            }
+            if(this.$parent.ops[this.name.charAt(0) + 'Rail']['width']) {
+                defineReactive(this.$options.propsData.ops, 'width', this.$parent.ops[this.name.charAt(0) + 'Rail']);
+            }
+        } else if(this.name === 'scrollContent') {
+            if(this.$options.propsData.ops['padding'] == true) {
+                let vm = this;
+                let temp = deepMerge(this.$options.propsData.ops, {});
+                Object.defineProperty(
+                    vm.$options.propsData,
+                    'state',
+                    {
+                        get: function() {
+                            let pos = vm.$parent.ops.vRail[pos];
+                            let padding = pos == 'right' ? 'paddingRight' : 'paddingLeft';
+                            let res = deepMerge(temp, {});
+                            res[padding] = vm.$parent.ops.vRail['width'];
+                            return res;
+                        }
+                    }
+                );
+            }
+        }
+        }
+        
+    },
+    // before the component updated, after the render() function,
+    // we shoule also merge the data again
+    beforeUpdate() {
+        if(this.name === 'vueScroll') {
+            var ops = deepMerge(GCF[this.name], {});
+            deepMerge(ops, this.$options.propsData.ops);
+        }else {
+            this.$options.propsData.ops = this.$options.propsData.ops || {};
+            var ops = deepMerge(GCF[this.name], {});
+            deepMerge(ops, this.$options.propsData.ops);
+            if(this.name === 'vBar' || this.name === 'hBar') {
+                if(this.$parent.ops[this.name.charAt(0) + 'Rail']['pos']) {
+                    defineReactive(this.$options.propsData.ops, 'pos', this.$parent.ops[this.name.charAt(0) + 'Rail']);
+                }
+                if(this.$parent.ops[this.name.charAt(0) + 'Rail']['width']) {
+                    defineReactive(this.$options.propsData.ops, 'width', this.$parent.ops[this.name.charAt(0) + 'Rail']);
+                }
+            } else if(this.name === 'scrollContent') {
+                if(this.$options.propsData.ops['padding'] == true) {
+                    let vm = this;
+                    let temp = deepMerge(this.$options.propsData.ops, {});
+                    Object.defineProperty(
+                        vm.$options.propsData,
+                        'state',
+                        {
+                            get: function() {
+                                let pos = vm.$parent.ops.vRail[pos];
+                                let padding = pos == 'right' ? 'paddingRight' : 'paddingLeft';
+                                let res = deepMerge(temp, {});
+                                res[padding] = vm.$parent.ops.vRail['width'];
+                                return res;
+                            }
+                        }
+                    );
+                }
+            }
+        } 
+    }
+}
+
 // vertical rail
 var vRail = {
     name: 'vRail',
+    mixins: [LifeCycleMix],
     render: function(_c) {
         var vm = this;
         var style = {
@@ -60,7 +245,8 @@ var vRail = {
 
 // vertical scrollBar
 var vScrollbar = {
-    name: 'vScrollbar',
+    name: 'vBar',
+    mixins: [LifeCycleMix],
     computed: {
         computedTop() {
             return this.state.top * 100;
@@ -128,6 +314,7 @@ var vScrollbar = {
 // horizontal rail
 var hRail = {
     name: 'hRail',
+    mixins: [LifeCycleMix],
     render: function(_c) {
         var vm = this;
         var style = {
@@ -156,28 +343,32 @@ var hRail = {
         }, this.$slots.default);
     },
     props: {
-        ops: function(){
-            return {
-                height: {
-                    default: '5px'
-                },
-                pos: {
-                    default: 'bottom'
-                },
-                background: {
-                    default: '#a5d6a7'
-                },
-                opacity: {
-                    default: '0.5'
+        ops: {
+            default: function(){
+                return {
+                    height: {
+                        default: '5px'
+                    },
+                    pos: {
+                        default: 'bottom'
+                    },
+                    background: {
+                        default: '#a5d6a7'
+                    },
+                    opacity: {
+                        default: '0.5'
+                    }
                 }
             }
         }
+         
     }
 }
 
 // horizontal scrollBar
 var hScrollbar = {
-    name: 'hScrollbar',
+    name: 'hBar',
+    mixins: [LifeCycleMix],
     computed: {
         computedLeft: function() {
             return this.state.left * 100;
@@ -242,13 +433,13 @@ var hScrollbar = {
 
 // scrollContent
 var vueScrollContent = {
-    name: 'vueScrollContent',
+    name: 'scrollContent',
     render: function(_c) {
         var vm = this;
         vm.state.style.height = vm.ops.height;
         return _c(vm.ops.tag, {
             style: vm.state.style,
-            class: "vueScrollContent",
+            class: "scrollContent",
             props: vm.ops.props,
             attrs: vm.ops.attrs
         }, this.$slots.default);
@@ -264,7 +455,7 @@ var vueScrollContent = {
         state: {
             default: function() {
                 return {
-                    
+
                 }
             }
         }
@@ -273,7 +464,7 @@ var vueScrollContent = {
 
 // vueScrollPanel
 var vueScrollPanel = {
-    name: 'vueScrollPanel',
+    name: 'scrollPanel',
     render: function(_c) {
         var vm = this;
         return _c('div', {
@@ -295,117 +486,12 @@ var vueScrollPanel = {
     }
 }
 
-/**
-     * @description return the computed value of a dom
-     * @author wangyi7099
-     * @param {any} dom 
-     * @param {any} property 
-     */
-    function getComputed(dom, property) {
-        return window.getComputedStyle(dom).getPropertyValue(property);
-    }
-
-    /**
-     * @description deepCopy a object.
-     * 
-     * @param {any} source 
-     * @returns 
-     */
-    function deepCopy(source, target) {
-        target = typeof target === 'object'&&target || {};
-        for (var key in source) {
-            target[key] = typeof source[key] === 'object' ? deepCopy(source[key], target[key] = {}) : source[key];
-        }
-        return target;
-    }
-    
-    /**
-     * 
-     * @description deepMerge a object.
-     * @param {any} from 
-     * @param {any} to 
-     */
-    function deepMerge(from, to) {
-        for (var key in from) {
-            if (typeof from[key] === 'object') {
-                if (!to[key]) {
-                    to[key] = {};
-                    deepCopy(from[key], to[key]);
-                } else {
-                    deepMerge(from[key], to[key]);
-                }
-            } else {
-                if(!to[key])
-                to[key] = from[key];
-            }
-        }
-        return to;
-    }
-    /**
-     * @description define a object reactive
-     * @author wangyi
-     * @export
-     * @param {any} target 
-     * @param {any} key 
-     * @param {any} source 
-     */
-    function defineReactive(target, key, source) {
-        Object.defineProperty(target, key, {
-            get: function() {
-                return source[key];
-            }
-        });
-    }
-
-var GCF = {
-    // 
-    scrollContent: {
-        tag: 'div',
-        padding: true,
-        height: '100%',
-        props: {
-        },
-        attrs: {
-        }
-    },
-    // 
-    vRail: {
-        width: '5px',
-        pos: 'left',
-        background: "#a5d6a7",
-        opacity: 0 //'0.5'
-    },
-    // 
-    vBar: {
-        width: '5px',
-        pos: 'left',
-        background: '#4caf50',
-        deltaY: 100,
-        keepShow: false,
-        opacity: 1,
-    },
-    // 
-    hRail: {
-        height: '5px',
-        pos: 'bottom',
-        background: "#a5d6a7",
-        opacity: 0 //'0.5'
-    },
-    // 
-    hBar: {
-        height: '5px',
-        pos: 'bottom',
-        background: '#4caf50',
-        keepShow: false,
-        opacity: 1
-    }
-}
-
 // vuescroll core module
 
 // import config
 var vueScroll = {
     name: "vueScroll",
+    mixins: [LifeCycleMix],
     data: function() {
         return {
             scrollPanel: {
@@ -471,15 +557,15 @@ var vueScroll = {
                     vm.showBar();
                 }
             },
-        }, [_c('vueScrollPanel', {
-            ref: 'vueScrollPanel',
+        }, [_c('scrollPanel', {
+            ref: 'scrollPanel',
             porps: {
             },
             on: {
                 scrolling: vm.scroll,
                 wheeling: vm.wheel
             }
-        }, [_c('vueScrollContent', {
+        }, [_c('scrollContent', {
             props: {
                 ops: vm.ops.scrollContent,
                 state: vm.scrollContent.state
@@ -491,7 +577,7 @@ var vueScroll = {
             on: {
                 scrollContentByBar: vm.scrollContentByBar
             }
-        }), _c("vScrollbar", {
+        }), _c("vBar", {
             props: {
                 ops: vm.ops.vBar,
                 state: vm.vScrollbar.state
@@ -504,7 +590,7 @@ var vueScroll = {
             on: {
                 scrollContentByBar: vm.scrollContentByBar
             }
-        }), _c('hScrollbar', {
+        }), _c('hBar', {
             props: {
                 ops: vm.ops.hBar,
                 state: vm.hScrollbar.state
@@ -514,7 +600,6 @@ var vueScroll = {
     },
     mounted: function() {
         this.initEl();
-        this.initPadding();
         this.initBarDrag();
         this.listenPanelTouch();
         // showbar at init time
@@ -522,23 +607,9 @@ var vueScroll = {
     },
     methods: {
         initEl: function() {
-            this.scrollPanel.el = this.$refs['vueScrollPanel'] && this.$refs['vueScrollPanel'].$el;
+            this.scrollPanel.el = this.$refs['scrollPanel'] && this.$refs['scrollPanel'].$el;
             this.vScrollbar.el = this.$refs['vScrollbar'] && this.$refs['vScrollbar'].$el;
             this.hScrollbar.el = this.$refs['hScrollbar'] && this.$refs['hScrollbar'].$el;
-        },
-        initPadding: function() {
-            // extra set the padding px if true
-            if (this.ops.scrollContent.padding) {
-                var properties = [];
-                var values = [];
-                if (this.ops.vRail.pos == 'left') {
-                    properties.push('paddingLeft');
-                } else {
-                    properties.push('paddingRight');
-                }
-                values.push(this.ops.vRail.width);
-                this.scrollContent.state.style[properties[0]] = values[0];
-            }
         },
         initBarDrag: function() {
             var vScrollbar = this.listenBarDrag('vScrollbar');
@@ -743,26 +814,6 @@ var vueScroll = {
             });
         }
     },
-    beforeCreate: function() {
-        this.$options.propsData.ops = this.$options.propsData.ops || {};
-        var ops = deepMerge(GCF, {});
-        deepMerge(ops, this.$options.propsData.ops);
-        defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
-        defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
-        defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
-        defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-    },
-    // before the component updated, after the render() function,
-    // we shoule also merge the data again
-    beforeUpdate() {
-            this.$options.propsData.ops = this.$options.propsData.ops || {};
-            var ops = deepMerge(GCF, {});
-            deepMerge(ops, this.$options.propsData.ops);
-            defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
-            defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
-            defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
-            defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-    },
     beforeDestroy: function() {
         // remove the registryed event.
         this.listeners.forEach(function(item) {
@@ -776,12 +827,23 @@ var vueScroll = {
     props: {
         ops:{
             default: function() {
-                var ops = deepMerge(GCF, {});
-                ops.vBar.pos = ops.vRail.pos;
-                ops.vBar.width = ops.vRail.width;
-                ops.hBar.pos = ops.hRail.pos;
-                ops.hBar.height = ops.hRail.height;
-                return ops;
+               return {
+                scrollContent: {
+
+                },
+                vRail: {
+
+                },
+                vBar: {
+
+                },
+                hRail: {
+
+                },
+                hBar: {
+
+                }
+               }
             }
         },
         accuracy: {

@@ -1,6 +1,10 @@
+
+import LifeCycleMix from './LifeCycleMix';
+
 // horizontal rail
 export default   {
     name: 'hRail',
+    mixins: [LifeCycleMix],
     render: function(_c) {
         var vm = this;
         var style = {
@@ -29,21 +33,24 @@ export default   {
         }, this.$slots.default);
     },
     props: {
-        ops: function(){
-            return {
-                height: {
-                    default: '5px'
-                },
-                pos: {
-                    default: 'bottom'
-                },
-                background: {
-                    default: '#a5d6a7'
-                },
-                opacity: {
-                    default: '0.5'
+        ops: {
+            default: function(){
+                return {
+                    height: {
+                        default: '5px'
+                    },
+                    pos: {
+                        default: 'bottom'
+                    },
+                    background: {
+                        default: '#a5d6a7'
+                    },
+                    opacity: {
+                        default: '0.5'
+                    }
                 }
             }
         }
+         
     }
 }

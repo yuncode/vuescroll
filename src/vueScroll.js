@@ -1,16 +1,17 @@
 // vuescroll core module
 
 import {
-    getComputed,
-    deepMerge
+    getComputed
 } from './util'
 
+import LifeCycleMix from './LifeCycleMix';
+
 // import config
-import GCF from './GlobalConfig'
-import {defineReactive} from './util'
+import GCF from './GlobalConfig' 
 
 export default  {
     name: "vueScroll",
+    mixins: [LifeCycleMix],
     data: function() {
         return {
             scrollPanel: {
@@ -76,15 +77,15 @@ export default  {
                     vm.showBar();
                 }
             },
-        }, [_c('vueScrollPanel', {
-            ref: 'vueScrollPanel',
+        }, [_c('scrollPanel', {
+            ref: 'scrollPanel',
             porps: {
             },
             on: {
                 scrolling: vm.scroll,
                 wheeling: vm.wheel
             }
-        }, [_c('vueScrollContent', {
+        }, [_c('scrollContent', {
             props: {
                 ops: vm.ops.scrollContent,
                 state: vm.scrollContent.state
@@ -96,7 +97,7 @@ export default  {
             on: {
                 scrollContentByBar: vm.scrollContentByBar
             }
-        }), _c("vScrollbar", {
+        }), _c("vBar", {
             props: {
                 ops: vm.ops.vBar,
                 state: vm.vScrollbar.state
@@ -109,7 +110,7 @@ export default  {
             on: {
                 scrollContentByBar: vm.scrollContentByBar
             }
-        }), _c('hScrollbar', {
+        }), _c('hBar', {
             props: {
                 ops: vm.ops.hBar,
                 state: vm.hScrollbar.state
@@ -119,7 +120,6 @@ export default  {
     },
     mounted: function() {
         this.initEl();
-        this.initPadding();
         this.initBarDrag();
         this.listenPanelTouch();
         // showbar at init time
@@ -127,23 +127,9 @@ export default  {
     },
     methods: {
         initEl: function() {
-            this.scrollPanel.el = this.$refs['vueScrollPanel'] && this.$refs['vueScrollPanel'].$el;
+            this.scrollPanel.el = this.$refs['scrollPanel'] && this.$refs['scrollPanel'].$el;
             this.vScrollbar.el = this.$refs['vScrollbar'] && this.$refs['vScrollbar'].$el;
             this.hScrollbar.el = this.$refs['hScrollbar'] && this.$refs['hScrollbar'].$el;
-        },
-        initPadding: function() {
-            // extra set the padding px if true
-            if (this.ops.scrollContent.padding) {
-                var properties = [];
-                var values = [];
-                if (this.ops.vRail.pos == 'left') {
-                    properties.push('paddingLeft');
-                } else {
-                    properties.push('paddingRight');
-                }
-                values.push(this.ops.vRail.width);
-                this.scrollContent.state.style[properties[0]] = values[0];
-            }
         },
         initBarDrag: function() {
             var vScrollbar = this.listenBarDrag('vScrollbar');
@@ -352,26 +338,6 @@ export default  {
             });
         }
     },
-    beforeCreate: function() {
-        this.$options.propsData.ops = this.$options.propsData.ops || {};
-        var ops = deepMerge(GCF, {});
-        deepMerge(ops, this.$options.propsData.ops);
-        defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
-        defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
-        defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
-        defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-    },
-    // before the component updated, after the render() function,
-    // we shoule also merge the data again
-    beforeUpdate() {
-            this.$options.propsData.ops = this.$options.propsData.ops || {};
-            var ops = deepMerge(GCF, {});
-            deepMerge(ops, this.$options.propsData.ops);
-            defineReactive(this.$options.propsData.ops.vBar, 'pos', this.$options.propsData.ops.vRail);
-            defineReactive(this.$options.propsData.ops.vBar, 'width', this.$options.propsData.ops.vRail);
-            defineReactive(this.$options.propsData.ops.hBar, 'pos', this.$options.propsData.ops.hRail);
-            defineReactive(this.$options.propsData.ops.hBar, 'height', this.$options.propsData.ops.hRail);
-    },
     beforeDestroy: function() {
         // remove the registryed event.
         this.listeners.forEach(function(item) {
@@ -385,12 +351,23 @@ export default  {
     props: {
         ops:{
             default: function() {
-                var ops = deepMerge(GCF, {});
-                ops.vBar.pos = ops.vRail.pos;
-                ops.vBar.width = ops.vRail.width;
-                ops.hBar.pos = ops.hRail.pos;
-                ops.hBar.height = ops.hRail.height;
-                return ops;
+               return {
+                scrollContent: {
+
+                },
+                vRail: {
+
+                },
+                vBar: {
+
+                },
+                hRail: {
+
+                },
+                hBar: {
+
+                }
+               }
             }
         },
         accuracy: {

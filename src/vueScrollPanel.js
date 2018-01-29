@@ -1,6 +1,6 @@
 // vueScrollPanel
 export default   {
-    name: 'vueScrollPanel',
+    name: 'scrollPanel',
     render: function(_c) {
         var vm = this;
         return _c('div', {
