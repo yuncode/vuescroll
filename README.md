@@ -21,7 +21,7 @@ vuescroll is a virtual scrollbar , that you can substitute vuescroll for native 
 
 ## Demo
 
-There are 15 demos on the website that can absolutely meet your daily need on developing website: [demo](https://wangyi7099.github.io/vuescrollDemo)
+[demo](https://wangyi7099.github.io/vuescrollDemo)
 
 ### Running Result
 

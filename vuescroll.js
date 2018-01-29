@@ -1,5 +1,5 @@
 /*
- * @name: vuescroll 3.2.12
+ * @name: vuescroll 3.2.15
  * @author: wangyi
  * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
  * @license: MIT
@@ -17,7 +17,7 @@
             Vue.component(vScrollbar.name, vScrollbar);
             Vue.component(hRail.name, hRail);
             Vue.component(hScrollbar.name, hScrollbar);
-            Vue.component(vuesSrollContent.name, vuesSrollContent);
+            Vue.component(vueScrollContent.name, vueScrollContent);
             Vue.component(vueScrollPanel.name, vueScrollPanel);
             //vueScroll
             Vue.component(vueScroll.name, vueScroll);
@@ -149,14 +149,14 @@
     }
 
     // scrollContent
-    var vuesSrollContent = {
-        name: 'vuesSrollContent',
+    var vueScrollContent = {
+        name: 'vueScrollContent',
         render: function(_c) {
             var vm = this;
 
             return _c(vm.ops.tag, {
                 style: vm.state.style,
-                class: "vuesSrollContent",
+                class: "vueScrollContent",
                 props: vm.ops.props,
                 attrs: vm.ops.attrs
             }, this.$slots.default);
@@ -462,7 +462,7 @@
                     scrolling: vm.scroll,
                     wheeling: vm.wheel
                 }
-            }, [_c('vuesSrollContent', {
+            }, [_c('vueScrollContent', {
                 props: {
                     ops: vm.ops.scrollContent,
                     state: vm.scrollContent.state
