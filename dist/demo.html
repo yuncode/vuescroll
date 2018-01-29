@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Document</title>
         <script src="./vue.js"></script>
-        <script src="./vuescroll.js"></script>
+        <script src="./vuescroll.min.js"></script>
         <style>
             #app {
                 display: flex;
@@ -68,9 +68,11 @@
                 data: {
                     ops: {
                         vBar: {
-                            deltaY: 100
+                            deltaY: 100,
+                            keepShow: true
                         },
                         hBar: {
+                            keepShow: true
                         },
                         vRail: {
                             pos:'right'
@@ -79,6 +81,9 @@
                     ops1: {
                         vRail: {
                             pos:'right'
+                        },
+                        vBar: {
+                            keepShow: true
                         }
                     }
                 },
