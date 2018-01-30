@@ -10,7 +10,7 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var Vue = _interopDefault(require('Vue'));
+var Vue = _interopDefault(require('vue'));
 
 // vertical rail
 var vRail = {
@@ -855,6 +855,8 @@ var scroll = {
 
         // registry the globe setting
         Vue$$1.prototype.$vuescrollConfig = GCF;
+
+        scroll.isInstalled = true;
     }
 };
 

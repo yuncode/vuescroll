@@ -4,4 +4,5 @@ const resolve = p => path.resolve(__dirname, '../', p)
 
 module.exports = {
   vuescroll: resolve('src/index'),
+  vuescrollEsm: resolve('src/index.esm')
 }

@@ -11,7 +11,7 @@ import vueScroll from './vueScroll';
 import GCF from './GlobalConfig'
 
 // external Vue
-import Vue from 'Vue';
+import Vue from 'vue';
 
 var scroll = {
     install: function(Vue) {
@@ -26,6 +26,8 @@ var scroll = {
 
         // registry the globe setting
         Vue.prototype.$vuescrollConfig = GCF
+
+        scroll.isInstalled = true;
     }
 };
 

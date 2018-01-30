@@ -29,7 +29,7 @@ const builds = {
     dest: resolve('dist/vuescroll.js'),
     format: 'umd',
     env: 'development',
-    external: ['Vue'],
+    external: ['vue'],
     banner
   },
   // Runtime+compiler production build  (Browser)
@@ -38,7 +38,7 @@ const builds = {
     dest: resolve('dist/vuescroll.min.js'),
     format: 'umd',
     env: 'production',
-    external: ['Vue'],
+    external: ['vue'],
     banner
   },
   // Runtime+compiler CommonJS build (ES Modules)
@@ -53,7 +53,7 @@ const builds = {
     entry: resolve('src/index.js'),
     dest: resolve('dist/vuescroll.common.js'),
     format: 'cjs',
-    external: ['Vue'],
+    external: ['vue'],
     banner
   }
 }
@@ -65,7 +65,7 @@ function genConfig (name) {
     external: opts.external,
     output: {
       globals: {
-        Vue: 'Vue'
+        vue: 'vue'
       },
       file: opts.dest,
       format: opts.format,
