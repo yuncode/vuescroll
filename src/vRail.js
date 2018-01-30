@@ -1,11 +1,7 @@
 
-import LifeCycleMix from './LifeCycleMix';
-
-
 // vertical rail
 export default  {
     name: 'vRail',
-    mixins: [LifeCycleMix],
     render: function(_c) {
         var vm = this;
         var style = {

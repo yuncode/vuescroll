@@ -53,10 +53,11 @@
      * @param {any} key 
      * @param {any} source 
      */
-    export function defineReactive(target, key, source) {
+    export function defineReactive(target, key, source, souceKey) {
+        souceKey = souceKey || key;
         Object.defineProperty(target, key, {
             get: function() {
-                return source[key];
+                return source[souceKey];
             }
         })
     }

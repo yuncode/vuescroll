@@ -1,10 +1,8 @@
 
-import LifeCycleMix from './LifeCycleMix';
 
 // horizontal rail
 export default   {
     name: 'hRail',
-    mixins: [LifeCycleMix],
     render: function(_c) {
         var vm = this;
         var style = {

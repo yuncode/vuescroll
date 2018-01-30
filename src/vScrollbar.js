@@ -1,10 +1,8 @@
 
-import LifeCycleMix from './LifeCycleMix';
 
 // vertical scrollBar
 export default  {
     name: 'vBar',
-    mixins: [LifeCycleMix],
     computed: {
         computedTop() {
             return this.state.top * 100;

@@ -1,10 +1,7 @@
 
-import LifeCycleMix from './LifeCycleMix';
-
 // horizontal scrollBar
 export default  {
     name: 'hBar',
-    mixins: [LifeCycleMix],
     computed: {
         computedLeft: function() {
             return this.state.left * 100;

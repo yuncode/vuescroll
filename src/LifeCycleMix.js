@@ -10,54 +10,41 @@ import {
  * to merge the global data into user-define data
  */
 function hackPropsData() {
-    
-    if(this.$options.name === 'vueScroll') {
-        var ops = deepMerge(GCF, {});
-        deepMerge(ops, this.$options.propsData.ops);
-    }else {
-        this.$options.propsData.ops = this.$options.propsData.ops || {};
-    var ops = deepMerge(GCF[this.$options.name], {});
-    deepMerge(ops, this.$options.propsData.ops);
-    if(this.$options.name === 'vBar' || this.$options.name === 'hBar') {
-        if(this.$parent.ops[this.$options.name.charAt(0) + 'Rail']['pos']) {
-            defineReactive(this.$options.propsData.ops, 'pos', this.$parent.ops[this.$options.name.charAt(0) + 'Rail']);
-        }
-        if(this.$parent.ops[this.$options.name.charAt(0) + 'Rail']['width']) {
-            defineReactive(this.$options.propsData.ops, 'width', this.$parent.ops[this.$options.name.charAt(0) + 'Rail']);
-        }
-    } else if(this.$options.name === 'scrollContent') {
-        if(this.$options.propsData.ops['padding'] == true) {
-            let vm = this;
-            let temp = deepMerge(vm.$options.propsData.state.style, {});
-            Object.defineProperty(
-                vm.$options.propsData.state,
-                'style',
-                {
-                    get: function() {
-                        let pos = vm.$parent.$parent.ops.vRail['pos'];
-                        let padding = pos == 'right' ? 'paddingRight' : 'paddingLeft';
-                        let otherPadding = pos == 'right' ? 'paddingLeft' : 'paddingRight';
-                        let res = deepMerge(temp, {});
-                        res[padding] = vm.$parent.$parent.ops.vRail['width'];
-                        if(res[otherPadding]) {
-                            delete res[otherPadding] ;
-                        }
-                        return res;
-                    }
+    let vm = this;
+    if(vm.$options.name === 'vueScroll') {
+        let ops = deepMerge(GCF, {});
+        deepMerge(ops, vm.$options.propsData.ops || (vm.$options.propsData.ops = {}));
+        deepMerge(vm.$options.propsData.ops, vm.fOps);
+        // sync the rail and bar
+        defineReactive(vm.fOps.vBar, 'ops', vm.fOps.vRail);
+        defineReactive(vm.fOps.vBar, 'width', vm.fOps.vRail);
+        defineReactive(vm.fOps.hBar, 'ops', vm.fOps.hRail);
+        defineReactive(vm.fOps.hBar, 'height', vm.fOps.hRail);
+        
+        let temp = deepMerge(vm.scrollContent.state.style, {});
+        Object.defineProperty(vm.scrollContent.state, 'style', {
+            get() {
+                let res = temp;
+                let pos = vm.fOps.vRail['pos'];
+                let padding = pos == 'right' ? 'paddingRight' : 'paddingLeft';
+                let otherPadding = pos == 'right' ? 'paddingLeft' : 'paddingRight';
+                // sync the scrollContent.padding
+                res['height'] = vm.fOps.scrollContent.height;
+                if(res[otherPadding]) {
+                    delete res[otherPadding];
                 }
-            );
-        }
-    }
-    }
+                if(vm.fOps.scrollContent.padding) {
+                    res[padding] = vm.fOps.vRail.width;
+                }
+                return res;
+            }
+        })
+        // defineReactive(vm.scrollContent.style, )
+    } 
+     
 }
-
 export default {
-    beforeCreate: function() {
+    created: function() {
         hackPropsData.call(this);
-    },
-    // before the component updated, after the render() function,
-    // we shoule also merge the data again
-    beforeUpdate() { 
-        hackPropsData.call(this);
-     }
+    }
 }
