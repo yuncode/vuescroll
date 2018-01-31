@@ -3,6 +3,6 @@ const path = require('path')
 const resolve = p => path.resolve(__dirname, '../', p)
 
 module.exports = {
-  vuescroll: resolve('src/index'),
-  vuescrollEsm: resolve('src/index.esm')
+  vsIns: resolve('src/index.ins'),
+  vsUnins: resolve('src/index.unins')
 }

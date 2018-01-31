@@ -155,6 +155,11 @@ export default  {
             vScrollbar();
             hScrollbar();
         },
+        scrollTo: function(pos) {
+            var x = pos.x || this.scrollPanel.el.scrollLeft;
+            var y = pos.y || this.scrollPanel.el.scrollTop;
+            this.scrollPanel.el.scrollTo(x, y);
+        },
         // get the bar height or width
         getBarPropertyValue: function(type, scrollPanelPropertyValue, scrollPanelScrollPropertyValue) {
             var property = type === 'vScrollbar' ? 'Height' : 'Width';

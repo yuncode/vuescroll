@@ -23,37 +23,44 @@ const resolve = p => {
 }
 
 const builds = {
-  // Runtime+compiler development build (Browser)
-  'web-full-dev': {
-    entry: resolve('src/index.js'),
+   'web-dev': {
+    entry: resolve('src/index.ins.js'),
     dest: resolve('dist/vuescroll.js'),
     format: 'umd',
     env: 'development',
-    external: ['vue'],
+    external: ['Vue'],
     banner
   },
-  // Runtime+compiler production build  (Browser)
-  'web-full-prod': {
-    entry: resolve('src/index.js'),
+   'web-prod': {
+    entry: resolve('src/index.ins.js'),
     dest: resolve('dist/vuescroll.min.js'),
     format: 'umd',
     env: 'production',
-    external: ['vue'],
+    external: ['Vue'],
     banner
   },
-  // Runtime+compiler CommonJS build (ES Modules)
-  'web-full-esm': {
-    entry: resolve('src/index.esm.js'),
+   'esm-dev': {
+    entry: resolve('src/index.unins.js'),
     dest: resolve('dist/vuescroll.esm.js'),
     format: 'es',
     banner
   },
-  // Runtime+compiler CommonJS build (CommonJS)
-  'web-full-cjs': {
-    entry: resolve('src/index.js'),
+  'esm-pro': {
+    entry: resolve('src/index.unins.js'),
+    dest: resolve('dist/vuescroll.esm.min.js'),
+    format: 'es',
+    banner
+  },
+   'cjs-dev': {
+    entry: resolve('src/index.unins.js'),
     dest: resolve('dist/vuescroll.common.js'),
     format: 'cjs',
-    external: ['vue'],
+    banner
+  },
+  'cjs-pro': {
+    entry: resolve('src/index.unins.js'),
+    dest: resolve('dist/vuescroll.common.min.js'),
+    format: 'cjs',
     banner
   }
 }
@@ -65,7 +72,7 @@ function genConfig (name) {
     external: opts.external,
     output: {
       globals: {
-        vue: 'vue'
+        Vue: 'Vue'
       },
       file: opts.dest,
       format: opts.format,

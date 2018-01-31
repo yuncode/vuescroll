@@ -33,6 +33,7 @@ export default   {
     props: {
         ops: {
             default: function(){
+                /* istanbul ignore next */
                 return {
                     height: {
                         default: '5px'

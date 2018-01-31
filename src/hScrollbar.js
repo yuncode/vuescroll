@@ -38,6 +38,7 @@ export default  {
     props: {
         ops: {
             default: function() {
+                /* istanbul ignore next */
                 return {
                     background: 'hsla(220,4%,58%,.3)',
                     opacity: 0,
@@ -48,6 +49,7 @@ export default  {
         },
         state: {
             default: function(){
+                /* istanbul ignore next */
                 return {
                     left: {
                         default: 0

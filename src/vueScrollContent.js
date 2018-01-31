@@ -1,10 +1,17 @@
 
+import {
+    deepMerge
+} from './util'
 // scrollContent
 export default  {
     name: 'scrollContent',
     render: function(_c) {
         var vm = this;
-        var style = vm.state.style;
+        var style = deepMerge(vm.state.style, {});
+        style.height = vm.ops.height;
+        if(vm.ops.padding) {
+            style[vm.ops.paddPos] =  vm.ops.paddValue;
+        }
         return _c(vm.ops.tag, {
             style: style,
             class: "scrollContent",
@@ -15,6 +22,7 @@ export default  {
     props: {
         ops: {
             default: function() {
+                /* istanbul ignore next */
                 return {
 
                 }
@@ -22,6 +30,7 @@ export default  {
         },
         state: {
             default: function() {
+                /* istanbul ignore next */
                 return {
 
                 }

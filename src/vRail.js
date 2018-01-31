@@ -32,6 +32,7 @@ export default  {
     props: {
         ops:{
             default: function() {
+                /* istanbul ignore next */
                 return {
                     width: {
                         default: '5px'

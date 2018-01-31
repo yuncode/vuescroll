@@ -1,5 +1,5 @@
 /*
-    * @name: vuescroll 3.3.7
+    * @name: vuescroll 3.3.9
     * @author: (c) 2018-2018 wangyi7099
     * @description: A virtual scrollbar based on vue.js 2.x inspired by slimscroll
     * @license: MIT
@@ -39,6 +39,7 @@ var vRail = {
     props: {
         ops:{
             default: function() {
+                /* istanbul ignore next */
                 return {
                     width: {
                         default: '5px'
@@ -99,6 +100,7 @@ var vScrollbar = {
     props: {
         ops: {
             default: function(){
+                /* istanbul ignore next */
                 return {
                     background: 'hsla(220,4%,58%,.3)',
                     opacity: 0,
@@ -109,6 +111,7 @@ var vScrollbar = {
         },
         state: {
             default:function(){
+                /* istanbul ignore next */
                 return {
                     top: {
                         default: 0
@@ -158,6 +161,7 @@ var hRail = {
     props: {
         ops: {
             default: function(){
+                /* istanbul ignore next */
                 return {
                     height: {
                         default: '5px'
@@ -217,6 +221,7 @@ var hScrollbar = {
     props: {
         ops: {
             default: function() {
+                /* istanbul ignore next */
                 return {
                     background: 'hsla(220,4%,58%,.3)',
                     opacity: 0,
@@ -227,6 +232,7 @@ var hScrollbar = {
         },
         state: {
             default: function(){
+                /* istanbul ignore next */
                 return {
                     left: {
                         default: 0
@@ -240,61 +246,6 @@ var hScrollbar = {
                 }
             }
         }
-    }
-}
-
-// scrollContent
-var vueScrollContent = {
-    name: 'scrollContent',
-    render: function(_c) {
-        var vm = this;
-        var style = vm.state.style;
-        return _c(vm.ops.tag, {
-            style: style,
-            class: "scrollContent",
-            props: vm.ops.props,
-            attrs: vm.ops.attrs
-        }, this.$slots.default);
-    },
-    props: {
-        ops: {
-            default: function() {
-                return {
-
-                }
-            }
-        },
-        state: {
-            default: function() {
-                return {
-
-                }
-            }
-        }
-    }
-}
-
-// vueScrollPanel
-var vueScrollPanel = {
-    name: 'scrollPanel',
-    render: function(_c) {
-        var vm = this;
-        return _c('div', {
-            style: {
-                overflow: 'scroll',
-                marginRight: '-17px',
-                height: 'calc(100% + 17px)'
-            },
-            class: "vueScrollPanel",
-            on: {
-                scroll: function(e) {
-                    vm.$emit('scrolling', e);
-                },
-                wheel: function(e) {
-                    vm.$emit('wheeling', e);
-                }
-            }
-        }, this.$slots.default);
     }
 }
 
@@ -362,6 +313,67 @@ var vueScrollPanel = {
         });
     }
 
+// scrollContent
+var vueScrollContent = {
+    name: 'scrollContent',
+    render: function(_c) {
+        var vm = this;
+        var style = deepMerge(vm.state.style, {});
+        style.height = vm.ops.height;
+        if(vm.ops.padding) {
+            style[vm.ops.paddPos] =  vm.ops.paddValue;
+        }
+        return _c(vm.ops.tag, {
+            style: style,
+            class: "scrollContent",
+            props: vm.ops.props,
+            attrs: vm.ops.attrs
+        }, this.$slots.default);
+    },
+    props: {
+        ops: {
+            default: function() {
+                /* istanbul ignore next */
+                return {
+
+                }
+            }
+        },
+        state: {
+            default: function() {
+                /* istanbul ignore next */
+                return {
+
+                }
+            }
+        }
+    }
+}
+
+// vueScrollPanel
+var vueScrollPanel = {
+    name: 'scrollPanel',
+    render: function(_c) {
+        var vm = this;
+        return _c('div', {
+            style: {
+                overflow: 'scroll',
+                marginRight: '-17px',
+                height: 'calc(100% + 17px)'
+            },
+            class: "vueScrollPanel",
+            on: {
+                scroll: function(e) {
+                    vm.$emit('scrolling', e);
+                },
+                wheel: function(e) {
+                    vm.$emit('wheeling', e);
+                }
+            }
+        }, this.$slots.default);
+    }
+}
+
 var GCF = {
     // 
     scrollContent: {
@@ -415,32 +427,34 @@ function hackPropsData() {
     let vm = this;
     if(vm.$options.name === 'vueScroll') {
         let ops = deepMerge(GCF, {});
-        deepMerge(ops, vm.$options.propsData.ops || (vm.$options.propsData.ops = {}));
-        deepMerge(vm.$options.propsData.ops, vm.fOps);
-        // sync the rail and bar
-        defineReactive(vm.fOps.vBar, 'ops', vm.fOps.vRail);
+        vm.$options.propsData.ops = vm.$options.propsData.ops || {};
+        Object.keys(vm.$options.propsData.ops).forEach(function(key) {
+            defineReactive(
+                vm.fOps,
+                key,
+                vm.$options.propsData.ops
+            );
+        });
+        deepMerge(ops, vm.fOps);
+        // to sync the rail and bar
+        defineReactive(vm.fOps.vBar, 'pos', vm.fOps.vRail);
         defineReactive(vm.fOps.vBar, 'width', vm.fOps.vRail);
-        defineReactive(vm.fOps.hBar, 'ops', vm.fOps.hRail);
+        defineReactive(vm.fOps.hBar, 'pos', vm.fOps.hRail);
         defineReactive(vm.fOps.hBar, 'height', vm.fOps.hRail);
         
-        let temp = deepMerge(vm.scrollContent.state.style, {});
-        Object.defineProperty(vm.scrollContent.state, 'style', {
-            get() {
-                let res = temp;
-                let pos = vm.fOps.vRail['pos'];
-                let padding = pos == 'right' ? 'paddingRight' : 'paddingLeft';
-                let otherPadding = pos == 'right' ? 'paddingLeft' : 'paddingRight';
-                // sync the scrollContent.padding
-                res['height'] = vm.fOps.scrollContent.height;
-                if(res[otherPadding]) {
-                    delete res[otherPadding];
+        let prefix = "padding-";
+        if(vm.fOps.scrollContent.padding) {
+            Object.defineProperty(vm.fOps.scrollContent, 'paddPos',   {
+                get() {
+                    return prefix + vm.fOps.vRail.pos
                 }
-                if(vm.fOps.scrollContent.padding) {
-                    res[padding] = vm.fOps.vRail.width;
+            });
+            Object.defineProperty(vm.fOps.scrollContent, 'paddValue',  {
+                get() {
+                    return vm.fOps.vRail.width
                 }
-                return res;
-            }
-        });
+            });
+        } 
         // defineReactive(vm.scrollContent.style, )
     } 
      
@@ -597,6 +611,11 @@ var vueScroll = {
             var hScrollbar = this.listenBarDrag('hScrollbar');
             vScrollbar();
             hScrollbar();
+        },
+        scrollTo: function(pos) {
+            var x = pos.x || this.scrollPanel.el.scrollLeft;
+            var y = pos.y || this.scrollPanel.el.scrollTop;
+            this.scrollPanel.el.scrollTo(x, y);
         },
         // get the bar height or width
         getBarPropertyValue: function(type, scrollPanelPropertyValue, scrollPanelScrollPropertyValue) {
@@ -837,6 +856,11 @@ var vueScroll = {
 // import config
 var scroll = {
     install: function(Vue) {
+        /* istanbul ignore if */
+        if(scroll.isInstalled) {
+            console.warn("You should not install the vuescroll again!");
+            return;
+        }
         Vue.component(vRail.name, vRail);
         Vue.component(vScrollbar.name, vScrollbar);
         Vue.component(hRail.name, hRail);
@@ -848,6 +872,8 @@ var scroll = {
 
         // registry the globe setting
         Vue.prototype.$vuescrollConfig = GCF;
+        
+        scroll.isInstalled = true;
     }
 };
 
